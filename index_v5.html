@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CN2Global - 中国转运全球</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+:root{--primary:#E53935;--primary-dark:#C62828;--accent:#FF6F00;--white:#fff;--bg:#FFF8F0;--text:#1a1a2e;--gray:#6b7280;--border:#e5e7eb;--success:#10b981;--danger:#ef4444}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans SC',sans-serif;background:var(--white);color:var(--text);line-height:1.6}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 28px;font-size:15px;font-weight:600;border-radius:25px;border:none;cursor:pointer;transition:all .3s}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--accent));color:var(--white);box-shadow:0 4px 15px rgba(229,57,53,.3)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(229,57,53,.4)}
+.btn-outline{background:var(--white);color:var(--primary);border:2px solid var(--primary)}
+.btn-outline:hover{background:var(--primary);color:var(--white)}
+.btn-block{width:100%}
+.form-input,.form-select{width:100%;padding:12px 16px;border:2px solid var(--border);border-radius:10px;font-size:14px}
+.form-input:focus,.form-select:focus{outline:none;border-color:var(--primary)}
+.form-label{display:block;margin-bottom:6px;font-size:13px;font-weight:600}
+.form-group{margin-bottom:16px}
+.phone-group{display:flex;gap:8px}
+.phone-group select{width:110px;flex-shrink:0}
+.phone-group input{flex:1}
+
+.nav{position:fixed;top:0;left:0;right:0;height:64px;background:rgba(255,255,255,.98);backdrop-filter:blur(10px);z-index:1000}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 20px;height:100%;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-size:22px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:24px}
+.nav-link{font-size:14px;font-weight:500;color:var(--gray);cursor:pointer}
+.nav-link:hover{color:var(--primary)}
+.nav-actions{display:flex;align-items:center;gap:12px}
+.lang-switch{display:flex;background:var(--bg);border-radius:20px;padding:3px}
+.lang-btn{padding:6px 12px;font-size:12px;font-weight:500;border-radius:17px;color:var(--gray);cursor:pointer;background:transparent;border:none}
+.lang-btn.active{background:var(--white);color:var(--primary);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+
+.hero{min-height:100vh;display:flex;align-items:center;padding:80px 20px 40px;background:linear-gradient(135deg,#FFF5F5,#FFF8F0);position:relative}
+.hero-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.hero-badge{display:inline-block;padding:8px 16px;background:rgba(229,57,53,.1);color:var(--primary);font-size:14px;font-weight:600;border-radius:20px;margin-bottom:16px}
+.hero-title{font-size:clamp(28px,5vw,48px);font-weight:800;line-height:1.2;margin-bottom:12px}
+.hero-sub{font-size:clamp(14px,2vw,18px);color:var(--gray);margin-bottom:24px}
+.hero-shops{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px}
+.shop-tag{display:flex;align-items:center;gap:6px;padding:8px 16px;background:var(--white);border:1.5px solid var(--border);border-radius:25px;font-size:13px;color:var(--text);transition:all .2s;cursor:pointer;text-decoration:none}
+.shop-tag:hover{border-color:var(--primary);background:#FFF5F5;transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.shop-icon{font-size:18px}
+.shop-name{font-weight:500}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:32px}
+.hero-stats{display:flex;gap:32px}
+.stat-value{font-size:28px;font-weight:700;color:var(--primary)}
+.stat-label{font-size:12px;color:var(--gray)}
+
+.hero-card{background:var(--white);border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,.08);padding:28px}
+.card-title{font-size:16px;font-weight:700;margin-bottom:20px}
+.calc-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.calc-result{background:linear-gradient(135deg,#FFF5F5,var(--bg));border-radius:12px;padding:20px;text-align:center;margin-top:20px}
+.calc-price{font-size:32px;font-weight:700;color:var(--primary)}
+.calc-detail{font-size:12px;color:var(--gray);margin-top:8px}
+
+.section{padding:60px 20px}
+.section-gray{background:var(--bg)}
+.section-header{text-align:center;margin-bottom:40px}
+.section-title{font-size:clamp(24px,4vw,32px);font-weight:700;margin-bottom:8px}
+.section-sub{font-size:15px;color:var(--gray)}
+
+.warehouse-box{background:linear-gradient(135deg,#FFF5F5,var(--white));border:2px solid rgba(229,57,53,.2);border-radius:16px;padding:24px;margin-top:32px}
+.warehouse-title{font-size:16px;font-weight:700;color:var(--primary);margin-bottom:12px}
+.warehouse-content{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.warehouse-item{background:var(--white);padding:12px;border-radius:8px;font-size:13px;line-height:1.8}
+.warehouse-label{font-weight:600;color:var(--text);margin-bottom:4px}
+
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+.feature{background:var(--white);border-radius:16px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,.05);transition:transform .3s}
+.feature:hover{transform:translateY(-4px)}
+.feature-icon{width:50px;height:50px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px}
+.feature-title{font-size:16px;font-weight:700;margin-bottom:8px}
+.feature-desc{font-size:13px;color:var(--gray);line-height:1.8}
+
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.step{background:var(--white);border-radius:16px;padding:24px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.05)}
+.step-num{width:44px;height:44px;background:linear-gradient(135deg,var(--primary),var(--accent));color:var(--white);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;margin:0 auto 16px}
+.step-title{font-size:14px;font-weight:600;margin-bottom:8px}
+.step-desc{font-size:12px;color:var(--gray)}
+
+.regions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.region-tag{padding:8px 16px;background:var(--white);border:1px solid var(--border);border-radius:20px;font-size:13px}
+
+.tips-box{background:linear-gradient(135deg,#FFF8E1,var(--bg));border:2px solid rgba(255,111,0,.3);border-radius:16px;padding:24px}
+.tips-title{font-size:16px;font-weight:700;color:var(--accent);margin-bottom:16px}
+.tips-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.tip-item{font-size:13px;color:var(--text)}
+
+.footer{background:var(--text);color:var(--white);padding:40px 20px;text-align:center}
+.footer-brand{font-size:24px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.footer-desc{font-size:13px;opacity:.7;margin-bottom:16px}
+
+/* Customer Service */
+.cs-trigger{position:fixed;bottom:24px;right:24px;width:56px;height:56px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(229,57,53,.4);z-index:1500}
+.cs-trigger i{font-size:24px;color:#fff}
+.cs-trigger .online-dot{position:absolute;top:4px;right:4px;width:12px;height:12px;background:#4CAF50;border-radius:50%;border:2px solid #fff}
+.cs-window{position:fixed;bottom:90px;right:24px;width:360px;height:500px;background:#fff;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.15);z-index:1500;display:none;flex-direction:column}
+.cs-window.open{display:flex}
+.cs-header{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;padding:16px}
+.cs-header-top{display:flex;justify-content:space-between;align-items:center}
+.cs-header-title{font-weight:600}
+.cs-close{background:none;border:none;color:#fff;font-size:20px;cursor:pointer}
+.cs-lang-row{display:flex;gap:4px;margin-top:10px;flex-wrap:wrap}
+.cs-lang-btn{padding:4px 8px;background:rgba(255,255,255,.2);border:none;border-radius:12px;color:#fff;font-size:11px;cursor:pointer}
+.cs-lang-btn.active{background:#fff;color:var(--primary)}
+.cs-messages{flex:1;padding:16px;overflow-y:auto;background:#f8f9fa}
+.cs-message{margin-bottom:12px;display:flex;gap:8px}
+.cs-message.bot .cs-avatar{background:var(--primary);color:#fff}
+.cs-message.user{flex-direction:row-reverse}
+.cs-avatar{width:32px;height:32px;background:#e0e0e0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.cs-bubble{max-width:75%;padding:10px 14px;border-radius:16px;font-size:13px;line-height:1.5}
+.cs-message.bot .cs-bubble{background:#fff;border-bottom-left-radius:4px}
+.cs-message.user .cs-bubble{background:var(--primary);color:#fff;border-bottom-right-radius:4px}
+.cs-quick{display:flex;flex-wrap:wrap;gap:6px;padding:8px 16px;border-top:1px solid var(--border)}
+.cs-quick-btn{padding:6px 12px;background:#f0f0f0;border:none;border-radius:16px;font-size:12px;cursor:pointer}
+.cs-input-area{padding:12px;border-top:1px solid var(--border);display:flex;gap:8px}
+.cs-input{flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:20px;font-size:13px}
+.cs-send{width:40px;height:40px;background:var(--primary);border:none;border-radius:50%;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+/* Modal */
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:2000;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border-radius:20px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.modal-title{font-size:18px;font-weight:700}
+.modal-close{background:none;border:none;font-size:24px;cursor:pointer;color:var(--gray)}
+.modal-body{padding:24px}
+.divider{display:flex;align-items:center;margin:16px 0;color:var(--gray);font-size:12px}
+.divider::before,.divider::after{content:'';flex:1;border-bottom:1px solid var(--border)}
+.divider::before{margin-right:12px}
+.divider::after{margin-left:12px}
+.social-login{display:flex;flex-direction:column;gap:10px}
+.social-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:12px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;border:none}
+.social-btn:hover{transform:translateY(-2px)}
+.social-btn.google{background:#fff;border:2px solid #ddd;color:#333}
+.social-btn.facebook{background:#1877F2;color:#fff}
+.social-btn.twitter{background:#000;color:#fff}
+.social-btn.apple{background:#000;color:#fff}
+.social-btn i{font-size:20px}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);text-align:center;font-size:13px;color:var(--gray)}
+.modal-footer a{color:var(--primary);cursor:pointer;text-decoration:none;font-weight:500}
+
+.toast{position:fixed;top:70px;right:20px;padding:14px 20px;background:var(--white);border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.1);z-index:3000;display:flex;align-items:center;gap:10px;font-size:14px}
+.toast.success{border-left:4px solid var(--success)}
+.toast.error{border-left:4px solid var(--danger)}
+.hidden{display:none!important}
+.promo-banner{background:linear-gradient(135deg,var(--primary),var(--accent));color:var(--white);padding:12px 20px;text-align:center;font-size:14px;font-weight:500}
+
+@media(max-width:768px){
+.hero-inner{grid-template-columns:1fr}
+.nav-links{display:none}
+.steps{grid-template-columns:1fr 1fr}
+.warehouse-content{grid-template-columns:1fr}
+.cs-window{width:calc(100vw - 32px);right:16px}
+}
+</style>
+</head>
+<body>
+<div class="promo-banner" data-i18n="promo">🎁 新用户注册立享首单9折优惠！</div>
+
+<nav class="nav">
+<div class="nav-inner">
+<div class="nav-logo">CN2Global</div>
+<div class="nav-links">
+<a class="nav-link" data-i18n="nav.services">服务优势</a>
+<a class="nav-link" data-i18n="nav.process">转运流程</a>
+<a class="nav-link" data-i18n="nav.regions">可送地区</a>
+</div>
+<div class="nav-actions">
+<div class="lang-switch">
+<button class="lang-btn active" data-lang="zh" onclick="setLang('zh')">中文</button>
+<button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+<button class="lang-btn" data-lang="ko" onclick="setLang('ko')">한국어</button>
+</div>
+<button class="btn btn-outline" data-i18n="btn.login" onclick="openModal('login')">登录</button>
+<button class="btn btn-primary" data-i18n="btn.register" onclick="openModal('register')">注册</button>
+</div>
+</div>
+</nav>
+
+<main>
+<section class="hero">
+<div class="hero-inner">
+<div>
+<div class="hero-badge" data-i18n="hero.badge">🚀 专业国际集运转运</div>
+<h1 class="hero-title" data-i18n="hero.title">中国转运全球・一站式代购集运服务</h1>
+<p class="hero-sub" data-i18n="hero.sub">淘宝、京东、1688、拼多多、抖音好物轻松寄往全世界</p>
+<button class="btn btn-primary" data-i18n="hero.calcBtn" onclick="scrollTo('calc')">快速询价</button>
+<button class="btn btn-outline" data-i18n="hero.warehouseBtn" onclick="scrollTo('warehouse')">仓库地址</button>
+</div>
+
+<!-- Shopping Platforms with Icons -->
+<div class="hero-shops" id="shopsContainer" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;">
+<a href="https://www.taobao.com" target="_blank" class="shop-tag"><span>🛒</span> 淘宝</a>
+<a href="https://www.tmall.com" target="_blank" class="shop-tag"><span>🐱</span> 天猫</a>
+<a href="https://www.jd.com" target="_blank" class="shop-tag"><span>🛍️</span> 京东</a>
+<a href="https://pinduoduo.com" target="_blank" class="shop-tag"><span>📱</span> 拼多多</a>
+<a href="https://www.1688.com" target="_blank" class="shop-tag"><span>🏭</span> 1688</a>
+<a href="https://www.douyin.com" target="_blank" class="shop-tag"><span>🎵</span> 抖音</a>
+<a href="https://www.vip.com" target="_blank" class="shop-tag"><span>💝</span> 唯品会</a>
+<a href="https://www.suning.com" target="_blank" class="shop-tag"><span>🏪</span> 苏宁</a>
+<a href="https://www.dewu.com" target="_blank" class="shop-tag"><span>👟</span> 得物</a>
+<a href="https://www.xiaohongshu.com" target="_blank" class="shop-tag"><span>📕</span> 小红书</a>
+</div>
+<div class="hero-stats">
+<div><div class="stat-value">15+</div><div class="stat-label" data-i18n="stat.countries">覆盖国家</div></div>
+<div><div class="stat-value">3</div><div class="stat-label" data-i18n="stat.languages">支持语言</div></div>
+<div><div class="stat-value">30天</div><div class="stat-label" data-i18n="stat.storage">免费仓储</div></div>
+<div><div class="stat-value">24h</div><div class="stat-label" data-i18n="stat.support">在线客服</div></div>
+</div>
+</div>
+<div class="hero-card" id="calc">
+<div class="card-title" data-i18n="calc.title">📦 快速询价</div>
+<div class="calc-row">
+<div class="form-group" style="margin-bottom:0">
+<label class="form-label" data-i18n="calc.dest">目的地</label>
+<select class="form-select" id="calcCountry">
+<option value="US">🇺🇸 美国 USA</option>
+<option value="UK">🇬🇧 英国 UK</option>
+<option value="DE">🇩🇪 德国 Germany</option>
+<option value="JP">🇯🇵 日本 Japan</option>
+<option value="KR">🇰🇷 韩国 Korea</option>
+<option value="AU">🇦🇺 澳大利亚</option>
+<option value="CA">🇨🇦 加拿大</option>
+<option value="SG">🇸🇬 新加坡</option>
+<option value="MY">🇲🇾 马来西亚</option>
+<option value="TH">🇹🇭 泰国</option>
+<option value="VN">🇻🇳 越南</option>
+<option value="NZ">🇳🇿 新西兰</option>
+<option value="TW">🇹🇼 台湾</option>
+<option value="HK">🇭🇰 香港</option>
+<option value="FR">🇫🇷 法国</option>
+<option value="IT">🇮🇹 意大利</option>
+<option value="ES">🇪🇸 西班牙</option>
+<option value="RU">🇷🇺 俄罗斯</option>
+<option value="BR">🇧🇷 巴西</option>
+<option value="MX">🇲🇽 墨西哥</option>
+<option value="AE">🇦🇪 阿联酋</option>
+<option value="SA">🇸🇦 沙特</option>
+<option value="ZA">🇿🇦 南非</option>
+</select>
+</div>
+<div class="form-group" style="margin-bottom:0">
+<label class="form-label" data-i18n="calc.weight">重量 (kg)</label>
+<input type="number" class="form-input" id="calcWeight" value="1" min="0.1">
+</div>
+</div>
+<div class="form-group">
+<label class="form-label" data-i18n="calc.method">运输方式</label>
+<select class="form-select" id="calcMethod">
+<option value="air" data-i18n="method.air">✈️ 空运 (3-7天)</option>
+<option value="sea" data-i18n="method.sea">🚢 海运 (20-30天)</option>
+<option value="express" data-i18n="method.express">🚀 快递 (2-3天)</option>
+<option value="line" data-i18n="method.line">📦 专线 (5-10天)</option>
+</select>
+</div>
+<button class="btn btn-primary btn-block" data-i18n="calc.btn" onclick="calculate()">计算运费</button>
+<div class="calc-result hidden" id="calcResult">
+<div class="calc-price" id="calcPrice">¥0</div>
+<div id="calcDetail" style="font-size:12px;color:#666;margin-top:8px"></div>
+</div>
+
+<div class="warehouse-box" id="warehouse">
+<div class="warehouse-title">🏠 仓库地址</div>
+<div class="warehouse-content">
+<div class="warehouse-item">
+<div class="warehouse-label">📍 中文地址</div>
+<div>山东省青岛市市北区小水清沟花园</div>
+<div>收件人：王盛</div>
+<div>电话：13793289889</div>
+</div>
+<div class="warehouse-item">
+<div class="warehouse-label">📍 English Address</div>
+<div>Xiaoshuiqinggou Garden, Shibei District</div>
+<div>Qingdao City, Shandong Province, China</div>
+<div>Recipient: Wang Sheng | Phone: 13793289889</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="section section-gray" id="services">
+<div class="section-header">
+<h2 class="section-title" data-i18n="features.title">我们的优势</h2>
+</div>
+<div class="features container">
+<div class="feature">
+<div class="feature-icon">🛒</div>
+<h3 class="feature-title" data-i18n="f1.title">支持所有网购平台</h3>
+<p class="feature-desc" data-i18n="f1.desc">淘宝、天猫、京东、拼多多、1688、抖音等国内所有网购平台包裹代收</p>
+</div>
+<div class="feature">
+<div class="feature-icon">📦</div>
+<h3 class="feature-title" data-i18n="f2.title">免费增值服务</h3>
+<p class="feature-desc" data-i18n="f2.desc">免费仓储30天、合箱打包、拍照验货、减重省运费</p>
+</div>
+<div class="feature">
+<div class="feature-icon">✈️</div>
+<h3 class="feature-title" data-i18n="f3.title">多渠道可选</h3>
+<p class="feature-desc" data-i18n="f3.desc">DHL / FedEx / UPS / EMS / 国际专线，多渠道灵活选择</p>
+</div>
+<div class="feature">
+<div class="feature-icon">📍</div>
+<h3 class="feature-title" data-i18n="f4.title">全程追踪</h3>
+<p class="feature-desc" data-i18n="f4.desc">全程物流追踪，清关稳定，安全派送全球</p>
+</div>
+</div>
+</section>
+
+<section class="section" id="process">
+<div class="section-header">
+<h2 class="section-title" data-i18n="steps.title">简单4步转运流程</h2>
+</div>
+<div class="steps container">
+<div class="step"><div class="step-num">1</div><div class="step-title" data-i18n="s1.title">复制地址下单</div><div class="step-desc" data-i18n="s1.desc">复制仓库地址，在国内平台下单购物</div></div>
+<div class="step"><div class="step-num">2</div><div class="step-title" data-i18n="s2.title">包裹入库</div><div class="step-desc" data-i18n="s2.desc">包裹寄到仓库，系统自动入库通知</div></div>
+<div class="step"><div class="step-num">3</div><div class="step-title" data-i18n="s3.title">合箱发货</div><div class="step-desc" data-i18n="s3.desc">选择需要合箱的包裹，提交发货</div></div>
+<div class="step"><div class="step-num">4</div><div class="step-title" data-i18n="s4.title">坐等收货</div><div class="step-desc" data-i18n="s4.desc">支付运费，全球派送，坐等收货</div></div>
+</div>
+</section>
+
+<section class="section section-gray" id="regions">
+<div class="section-header">
+<h2 class="section-title" data-i18n="regions.title">可送达地区</h2>
+<p class="section-sub" data-i18n="regions.sub">覆盖全球多数国家和地区</p>
+</div>
+<div class="regions container">
+<span class="region-tag">🇺🇸 美国</span><span class="region-tag">🇨🇦 加拿大</span><span class="region-tag">🇬🇧 英国</span><span class="region-tag">🇩🇪 德国</span><span class="region-tag">🇫🇷 法国</span><span class="region-tag">🇮🇹 意大利</span><span class="region-tag">🇪🇸 西班牙</span><span class="region-tag">🇦🇺 澳大利亚</span><span class="region-tag">🇳🇿 新西兰</span><span class="region-tag">🇯🇵 日本</span><span class="region-tag">🇰🇷 韩国</span><span class="region-tag">🇸🇬 新加坡</span><span class="region-tag">🇲🇾 马来西亚</span><span class="region-tag">🇹🇭 泰国</span><span class="region-tag">🇻🇳 越南</span><span class="region-tag">🇵🇭 菲律宾</span><span class="region-tag">🇮🇩 印尼</span><span class="region-tag">🇦🇪 阿联酋</span><span class="region-tag">🇸🇦 沙特</span><span class="region-tag">🇿🇦 南非</span><span class="region-tag">🇷🇺 俄罗斯</span><span class="region-tag">🇧🇷 巴西</span><span class="region-tag">🇲🇽 墨西哥</span>
+</div>
+</section>
+
+<section class="section">
+<div class="container">
+<div class="tips-box">
+<div class="tips-title" data-i18n="tips.title">⚠️ 温馨提示</div>
+<div class="tips-list">
+<div class="tip-item" data-i18n="tip1">🚫 禁运物品：液体、粉末、电池、食品、药品、易燃易爆、仿牌、生鲜等</div>
+<div class="tip-item" data-i18n="tip2">✨ 部分渠道可走化妆品、带电产品，详情咨询客服</div>
+<div class="tip-item" data-i18n="tip3">⚖️ 体积重与实际重取较大值计费，合箱更划算</div>
+<div class="tip-item" data-i18n="tip4">🎁 新用户注册立享首单优惠，详情咨询客服</div>
+</div>
+</div>
+</div>
+</section>
+
+<footer class="footer">
+<div class="footer-brand">CN2Global</div>
+<div class="footer-desc">China to Global Shipping | 中国转运全球 | 중국에서 전 세계로</div>
+<div class="footer-desc">📞 客服微信：cn2global | 📧 Email: service@cn2global.com</div>
+<div class="footer-payments" style="margin-top:16px;">
+<div style="font-size:12px;opacity:.7;margin-bottom:8px;">支付方式 Payment Methods:</div>
+<div style="display:flex;justify-content:center;flex-wrap:wrap;gap:12px;font-size:24px;">
+<span title="微信支付">💳</span>
+<span title="支付宝">💰</span>
+<span title="PayPal">🅿️</span>
+<span title="Visa">💳</span>
+<span title="Mastercard">💠</span>
+<span title="American Express">🇦🇺</span>
+<span title="Apple Pay">🍎</span>
+<span title="Google Pay">G</span>
+<span title="银行转账">🏦</span>
+<span title="加密货币">₿</span>
+</div>
+</div>
+</footer>
+</main>
+
+<!-- Customer Service -->
+<div class="cs-trigger" onclick="toggleCS()"><span style="font-size:24px">💬</span><span class="online-dot"></span></div>
+<div class="cs-window" id="csWindow">
+<div class="cs-header">
+<div class="cs-header-top">
+<div class="cs-header-title">💬 CN2Global 客服</div>
+<button class="cs-close" onclick="toggleCS()">×</button>
+</div>
+<div class="cs-lang-row">
+<button class="cs-lang-btn active" onclick="setCSLang('zh')">中文</button>
+<button class="cs-lang-btn" onclick="setCSLang('en')">EN</button>
+<button class="cs-lang-btn" onclick="setCSLang('ko')">한국어</button>
+<button class="cs-lang-btn" onclick="setCSLang('ja')">日本語</button>
+<button class="cs-lang-btn" onclick="setCSLang('es')">ES</button>
+<button class="cs-lang-btn" onclick="setCSLang('ar')">AR</button>
+<button class="cs-lang-btn" onclick="setCSLang('ru')">RU</button>
+<button class="cs-lang-btn" onclick="setCSLang('fr')">FR</button>
+</div>
+</div>
+<div class="cs-messages" id="csMessages"></div>
+<div class="cs-quick" id="csQuick"></div>
+<div class="cs-input-area">
+<input type="text" class="cs-input" id="csInput" placeholder="输入消息..." onkeypress="if(event.key==='Enter')sendCSMsg()">
+<button class="cs-send" onclick="sendCSMsg()"><span>📤</span></button>
+</div>
+</div>
+
+<!-- Login Modal -->
+<div class="modal-overlay" id="loginModal">
+<div class="modal">
+<div class="modal-header"><div class="modal-title" data-i18n="login.title">登录</div><button class="modal-close" onclick="closeModal('login')">×</button></div>
+<div class="modal-body">
+<div class="social-login">
+<button class="social-btn google" onclick="socialLogin('google')"><span style="font-size:20px">🔵</span> Google 登录</button>
+<button class="social-btn facebook" onclick="socialLogin('facebook')"><span style="font-size:20px">🔵</span> Facebook 登录</button>
+<button class="social-btn twitter" onclick="socialLogin('twitter')"><span style="font-size:20px">✖️</span> X / Twitter 登录</button>
+</div>
+<div class="divider" data-i18n="or">或</div>
+<div class="form-group"><label class="form-label" data-i18n="form.account">手机号/邮箱</label><input type="text" class="form-input" id="loginAccount"></div>
+<div class="form-group"><label class="form-label" data-i18n="form.password">密码</label><input type="password" class="form-input" id="loginPassword"></div>
+<button class="btn btn-primary btn-block" data-i18n="login.btn" onclick="handleLogin()">登录</button>
+<div class="modal-footer"><span data-i18n="login.noAccount">没有账号？</span> <a onclick="switchModal('register')" data-i18n="login.register">立即注册</a></div>
+</div>
+</div>
+</div>
+
+<!-- Register Modal -->
+<div class="modal-overlay" id="registerModal">
+<div class="modal">
+<div class="modal-header"><div class="modal-title" data-i18n="register.title">注册</div><button class="modal-close" onclick="closeModal('register')">×</button></div>
+<div class="modal-body">
+<div class="social-login">
+<button class="social-btn google" onclick="socialLogin('google')"><span style="font-size:20px">🔵</span> Google 注册</button>
+<button class="social-btn facebook" onclick="socialLogin('facebook')"><span style="font-size:20px">🔵</span> Facebook 注册</button>
+<button class="social-btn twitter" onclick="socialLogin('twitter')"><span style="font-size:20px">✖️</span> X / Twitter 注册</button>
+</div>
+<div class="divider" data-i18n="or">或</div>
+<div class="form-group">
+<label class="form-label" data-i18n="form.phone">手机号</label>
+<div class="phone-group">
+<select class="form-select" id="regCode">
+<option value="+86">🇨🇳 +86</option>
+<option value="+1">🇺🇸 +1</option>
+<option value="+44">🇬🇧 +44</option>
+<option value="+81">🇯🇵 +81</option>
+<option value="+82">🇰🇷 +82</option>
+<option value="+61">🇦🇺 +61</option>
+<option value="+65">🇸🇬 +65</option>
+<option value="+60">🇲🇾 +60</option>
+<option value="+66">🇹🇭 +66</option>
+<option value="+84">🇻🇳 +84</option>
+<option value="+852">🇭🇰 +852</option>
+<option value="+886">🇹🇼 +886</option>
+<option value="+49">🇩🇪 +49</option>
+<option value="+33">🇫🇷 +33</option>
+<option value="+39">🇮🇹 +39</option>
+<option value="+34">🇪🇸 +34</option>
+<option value="+7">🇷🇺 +7</option>
+<option value="+55">🇧🇷 +55</option>
+<option value="+52">🇲🇽 +52</option>
+<option value="+91">🇮🇳 +91</option>
+<option value="+62">🇮🇩 +62</option>
+<option value="+63">🇵🇭 +63</option>
+<option value="+64">🇳🇿 +64</option>
+<option value="+971">🇦🇪 +971</option>
+<option value="+966">🇸🇦 +966</option>
+</select>
+<input type="tel" class="form-input" id="regPhone" placeholder="请输入手机号">
+</div>
+</div>
+<div class="form-group"><label class="form-label" data-i18n="form.email">邮箱 (选填)</label><input type="email" class="form-input" id="regEmail" placeholder="example@email.com"></div>
+<div class="form-group"><label class="form-label" data-i18n="form.password">密码 (至少6位)</label><input type="password" class="form-input" id="regPassword" placeholder="******"></div>
+<div class="form-group"><label class="form-label" data-i18n="form.name">姓名</label><input type="text" class="form-input" id="regName" placeholder="Your Name"></div>
+<button class="btn btn-primary btn-block" data-i18n="register.btn" onclick="handleRegister()">注册</button>
+<div class="modal-footer"><span data-i18n="register.hasAccount">已有账号？</span> <a onclick="switchModal('login')" data-i18n="register.login">立即登录</a></div>
+</div>
+</div>
+</div>
+
+<script>
+const API='http://119.28.137.229:3000/api';
+let lang=localStorage.getItem('lang')||'zh';
+let csLang='zh';
+
+// Shopping platforms data with emoji icons
+const shops=[
+{name:'淘宝',icon:'🛒',url:'https://www.taobao.com'},
+{name:'天猫',icon:'🐱',url:'https://www.tmall.com'},
+{name:'京东',icon:'🛍️',url:'https://www.jd.com'},
+{name:'拼多多',icon:'📱',url:'https://pinduoduo.com'},
+{name:'1688',icon:'🏭',url:'https://www.1688.com'},
+{name:'抖音',icon:'🎵',url:'https://www.douyin.com'},
+{name:'唯品会',icon:'💝',url:'https://www.vip.com'},
+{name:'苏宁',icon:'🏪',url:'https://www.suning.com'},
+{name:'得物',icon:'👟',url:'https://www.dewu.com'},
+{name:'小红书',icon:'📕',url:'https://www.xiaohongshu.com'}
+];
+
+// Customer service responses
+const csResponses={
+zh:{welcome:'您好！欢迎来到CN2Global。我是您的专属客服，有什么可以帮到您的吗？',shipping:'您好！请问您要寄往哪个国家？我们可以提供空运、海运、快递等多种渠道。',price:'运费计算请使用页面上方的询价功能，或告诉我您的目的地和重量，我来帮您估算。',prohibited:'🚫 禁运物品包括：液体、粉末、电池、食品、药品、易燃易爆、仿牌、生鲜等。✨部分渠道可走化妆品、带电产品，请咨询客服。',contact:'📞 客服微信：cn2global\n📧 Email: service@cn2global.com',default:'感谢您的留言，我们会尽快回复。如需即时帮助，请添加客服微信：cn2global'},
+en:{welcome:'Hello! Welcome to CN2Global. How can I help you today?',shipping:'Which country would you like to ship to? We offer air, sea, express and line shipping options.',price:'Use the quote calculator above, or tell me your destination and weight for an estimate.',prohibited:'🚫 Prohibited: Liquids, powders, batteries, food, medicine, flammables, replicas, fresh goods. Some channels allow cosmetics and battery items.',contact:'📞 WeChat: cn2global\n📧 Email: service@cn2global.com',default:'Thank you for your message. For instant support, please contact us via WeChat: cn2global'},
+ko:{welcome:'안녕하세요! CN2Global에 오신 것을 환영합니다. 무엇을 도와드릴까요?',shipping:'어떤 국가로 배송하시겠습니까? 항공, 해운, 특급 등 다양한 배송 옵션을 제공합니다.',price:'페이지 상단의 견적 계산기를 사용하거나 목적지와 무게를 알려주세요.',prohibited:'🚫 금지 물품: 액체, 분말, 배터리, 식품, 의약품, 인화성, 이미테이션, 신선식품 등',contact:'📞 위챗: cn2global\n📧 Email: service@cn2global.com',default:'메시지 감사합니다. 즉각적인 도움이 필요하시면 위챗으로 연락주세요: cn2global'},
+ja:{welcome:'您好！欢迎来到CN2Global。我是您的专属客服，有什么可以帮到您的吗？（日本語）',shipping:'航空便、船便、輸出小包などをご用意しております。',price:'送料の計算はページ上部の見積もり機能をご使用いただくか、目的地と重量をお知らせください。',prohibited:'🚫 禁制品：液体、粉体、バッテリー、食品、医薬品、引火性物品、偽ブランド品、生鮮食品など',contact:'📞 WeChat：cn2global\n📧 Email: service@cn2global.com',default:'メッセージありがとうございます。即座のサポートについてはWeChatまで：cn2global'},
+es:{welcome:'¡Hola! Bienvenido a CN2Global. ¿En qué puedo ayudarte?',shipping:'¿A qué país deseas enviar? Ofrecemos envío aéreo, marítimo, expreso y línea.',price:'Usa la calculadora de tarifas arriba, o dime tu destino y peso.',prohibited:'🚫 Prohibido: Líquidos, polvos, baterías, alimentos, medicamentos, inflamables, réplicas.',contact:'📞 WeChat: cn2global\n📧 Email: service@cn2global.com',default:'Gracias por tu mensaje. Para ayuda instantánea: WeChat cn2global'},
+ar:{welcome:'!مرحبا بك في CN2Global كيف يمكنني مساعدتك',shipping:'إلى أي بلد تريد الشحن؟ نقدم الشحن الجوي والبحري وال السريع.',price:'استخدم حاسبة الأسعار أعلاه أو أخبرني بالوجهة والوزن.',prohibited:'🚫 محظور: السوائل، المساحيق، البطاريات، الأطعمة، الأدوية، القابلة للاشتعال.',contact:'📞 وي شات: cn2global\n📧 Email: service@cn2global.com',default:'شكرا لرسالتك. للمساعدة الفورية: وي شات cn2global'},
+ru:{welcome:'!Добро пожаловать в CN2Global Чем могу помочь',shipping:'В какую страну хотите отправить? Мы предлагаем авиа, море, экспресс.',price:'Используйте калькулятор стоимости выше или сообщите пункт назначения и вес.',prohibited:'🚫 Запрещено: Жидкости, порошки, батареи, продукты, лекарства, воспламеняющееся.',contact:'📞 WeChat: cn2global\n📧 Email: service@cn2global.com',default:'Спасибо за сообщение. Для мгновенной помощи: WeChat cn2global'},
+fr:{welcome:'!Bonjour et bienvenue à CN2Global Comment puis-je vous aider',shipping:'Vers quel pays souhaitez-vous envoyer? Nous proposons aérien, maritime, express.',price:'Utilisez le calculateur ci-dessus ou indiquez destination et poids.',prohibited:'🚫 Interdit: Liquides, poudres, batteries, alimentation, médicaments, inflammables.',contact:'📞 WeChat: cn2global\n📧 Email: service@cn2global.com',default:'Merci pour votre message. Aide instantanée: WeChat cn2global'}
+};
+
+const csQuickBtns={
+zh:['运费查询','禁运物品','注册问题','客服微信'],
+en:['Shipping Rates','Prohibited Items','Registration','Contact Us'],
+ko:['운임 조회','금지 물품','회원가입','고객센터'],
+ja:['送料查询','禁制品','登録','連絡先'],
+es:['Tarifas','Artículos Prohibidos','Registro','Contacto'],
+ar:['أسعار الشحن','مواد محظورة','تسجيل','اتصل بنا'],
+ru:['Тарифы','Запрещено','Регистрация','Контакт'],
+fr:['Tarifs','Interdit','Inscription','Contact']
+};
+
+const i18n={
+zh:{nav:{services:'服务优势',process:'转运流程',regions:'可送地区'},btn:{login:'登录',register:'注册'},promo:'🎁 新用户注册立享首单9折优惠！',hero:{badge:'🚀 专业国际集运转运',title:'中国转运全球・一站式代购集运服务',sub:'淘宝、京东、1688、拼多多、抖音好物轻松寄往全世界',calcBtn:'快速询价',warehouseBtn:'仓库地址'},stat:{countries:'覆盖国家',languages:'支持语言',storage:'免费仓储',support:'在线客服'},calc:{title:'📦 快速询价',dest:'目的地',weight:'重量 (kg)',method:'运输方式',btn:'计算运费'},method:{air:'✈️ 空运 (3-7天)',sea:'🚢 海运 (20-30天)',express:'🚀 快递 (2-3天)',line:'📦 专线 (5-10天)'},features:{title:'我们的优势'},f1:{title:'支持所有网购平台',desc:'淘宝、天猫、京东、拼多多、1688、抖音等国内所有网购平台包裹代收'},f2:{title:'免费增值服务',desc:'免费仓储30天、合箱打包、拍照验货、减重省运费'},f3:{title:'多渠道可选',desc:'DHL / FedEx / UPS / EMS / 国际专线，多渠道灵活选择'},f4:{title:'全程追踪',desc:'全程物流追踪，清关稳定，安全派送全球'},steps:{title:'简单4步转运流程'},s1:{title:'复制地址下单',desc:'复制仓库地址，在国内平台下单购物'},s2:{title:'包裹入库',desc:'包裹寄到仓库，系统自动入库通知'},s3:{title:'合箱发货',desc:'选择需要合箱的包裹，提交发货'},s4:{title:'坐等收货',desc:'支付运费，全球派送，坐等收货'},regions:{title:'可送达地区',sub:'覆盖全球多数国家和地区'},tips:{title:'⚠️ 温馨提示'},tip1:'🚫 禁运物品：液体、粉末、电池、食品、药品、易燃易爆、仿牌、生鲜等',tip2:'✨ 部分渠道可走化妆品、带电产品，详情咨询客服',tip3:'⚖️ 体积重与实际重取较大值计费，合箱更划算',tip4:'🎁 新用户注册立享首单优惠，详情咨询客服'},login:{title:'登录',google:'Google 登录',btn:'登录',noAccount:'没有账号？',register:'立即注册'},register:{title:'注册',google:'Google 注册',btn:'注册',hasAccount:'已有账号？',login:'立即登录'},form:{account:'手机号/邮箱',password:'密码',phone:'手机号',email:'邮箱 (选填)',name:'姓名'},or:'或'},
+en:{nav:{services:'Services',process:'Process',regions:'Coverage'},btn:{login:'Login',register:'Register'},promo:'🎁 New users get 10% off first order!',hero:{badge:'🚀 Professional International Shipping',title:'Ship from China Worldwide',sub:'Taobao, JD, 1688, Pinduoduo, Douyin - easy global shipping',calcBtn:'Get Quote',warehouseBtn:'Warehouse'},stat:{countries:'Countries',languages:'Languages',storage:'Free Storage',support:'24/7 Support'},calc:{title:'📦 Quick Quote',dest:'Destination',weight:'Weight (kg)',method:'Method',btn:'Calculate'},method:{air:'✈️ Air (3-7 days)',sea:'🚢 Sea (20-30 days)',express:'🚀 Express (2-3 days)',line:'📦 Line (5-10 days)'},features:{title:'Our Advantages'},f1:{title:'All Platforms Supported',desc:'Taobao, Tmall, JD, Pinduoduo, 1688, Douyin and more'},f2:{title:'Free Value-Added Services',desc:'Free 30-day storage, consolidation, photo inspection'},f3:{title:'Multiple Shipping Options',desc:'DHL / FedEx / UPS / EMS / Express Lines'},f4:{title:'Full Tracking',desc:'Real-time tracking, stable customs, safe delivery'},steps:{title:'Simple 4-Step Process'},s1:{title:'Copy & Order',desc:'Copy warehouse address and shop on Chinese platforms'},s2:{title:'Package Arrival',desc:'Packages arrive, auto notification'},s3:{title:'Consolidate & Ship',desc:'Select packages to consolidate and submit'},s4:{title:'Receive',desc:'Pay shipping, global delivery, wait for arrival'},regions:{title:'Coverage Areas',sub:'Covering most countries worldwide'},tips:{title:'⚠️ Important Notes'},tip1:'🚫 Prohibited: Liquids, powders, batteries, food, medicine, flammables, replicas',tip2:'✨ Some channels allow cosmetics and battery products',tip3:'⚖️ Volumetric or actual weight (whichever is greater)',tip4:'🎁 New users get first order discount'},login:{title:'Login',google:'Sign in with Google',btn:'Login',noAccount:'No account?',register:'Register'},register:{title:'Register',google:'Sign up with Google',btn:'Register',hasAccount:'Have account?',login:'Login'},form:{account:'Phone/Email',password:'Password',phone:'Phone',email:'Email (optional)',name:'Name'},or:'or'},
+ko:{nav:{services:'서비스',process:'절차',regions:'지역'},btn:{login:'로그인',register:'회원가입'},promo:'🎁 신규 회원 첫 주문 10% 할인!',hero:{badge:'🚀 전문 국제 배송',title:'중국에서 전 세계로',sub:'타오바오, 징둥, 1688, 핀둬둬, 더우인 쉽게 배송',calcBtn:'견적 확인',warehouseBtn:'창고 주소'},stat:{countries:'국가',languages:'언어',storage:'무료 보관',support:'24시간 지원'},calc:{title:'📦 빠른 견적',dest:'목적지',weight:'무게 (kg)',method:'배송',btn:'계산'},method:{air:'✈️ 항공 (3-7일)',sea:'🚢 해운 (20-30일)',express:'🚀 특급 (2-3일)',line:'📦 전용 (5-10일)'},features:{title:'우리의 장점'},f1:{title:'모든 플랫폼 지원',desc:'타오바오, 티몰, 징둥, 핀둬둬, 1688, 더우인 등'},f2:{title:'무료 서비스',desc:'30일 무료 보관, 합포장, 사진 확인'},f3:{title:'다양한 배송',desc:'DHL / FedEx / UPS / EMS / 전용 노선'},f4:{title:'전체 추적',desc:'실시간 추적, 안정적 통관, 안전 배송'},steps:{title:'간단한 4단계'},s1:{title:'주소 복사',desc:'창고 주소 복사 후 중국 플랫폼에서 주문'},s2:{title:'패키지 도착',desc:'패키지 도착 시 자동 알림'},s3:{title:'합포장 발송',desc:'합포장할 패키지 선택 후 발송'},s4:{title:'수령',desc:'운임 결제, 전 세계 배송, 수령'},regions:{title:'배송 가능 지역',sub:'전 세계 대부분 국가'},tips:{title:'⚠️ 주의 사항'},tip1:'🚫 금지: 액체, 분말, 배터리, 식품, 의약품, 인화성',tip2:'✨ 일부 채널은 화장품, 배터리 가능',tip3:'⚖️ 부피중량과 실중량 중 큰 값',tip4:'🎁 신규 회원 첫 주문 할인'},login:{title:'로그인',google:'Google 로그인',btn:'로그인',noAccount:'계정 없으신가요?',register:'회원가입'},register:{title:'회원가입',google:'Google 가입',btn:'가입',hasAccount:'계정이 있으신가요?',login:'로그인'},form:{account:'전화/이메일',password:'비밀번호',phone:'전화번호',email:'이메일 (선택)',name:'이름'},or:'또는'}
+};
+
+function t(k){const ks=k.split('.');let v=i18n[lang];for(const k of ks)v=v?.[k];return v||k}
+function applyLang(){document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');const v=t(k);if(v){if(el.tagName==='INPUT')el.placeholder=v;else el.innerHTML=v}});document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));localStorage.setItem('lang',lang);renderShops()}
+function setLang(l){lang=l;applyLang()}
+function scrollTo(id){document.getElementById(id)?.scrollIntoView({behavior:'smooth'})}
+
+// Render shopping platforms
+function renderShops(){
+const container=document.getElementById('shopsContainer');
+if(!container)return;
+container.innerHTML=shops.map(s=>`<a href="${s.url}" target="_blank" class="shop-tag"><span class="shop-icon">${s.icon}</span><span class="shop-name">${s.name}</span></a>`).join('');
+}
+
+// Social login - Google OAuth with Hash Redirect
+function socialLogin(provider){
+if(provider==='google'){
+// Replace with your actual Google Client ID
+const CLIENT_ID='151508026115-drn9srorb0or5i0ihtc2m6tsehg74l9g.apps.googleusercontent.com';
+const REDIRECT_URI=encodeURIComponent('https://llminfer.com');
+const SCOPE=encodeURIComponent('email profile');
+const STATE=Math.random().toString(36).substring(7);
+// Store state for validation
+localStorage.setItem('oauth_state',STATE);
+localStorage.setItem('oauth_provider','google');
+// Use Google OAuth implicit flow - token returned in hash
+window.location.href=`https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=token&state=${STATE}&scope=${SCOPE}`;
+}else if(provider==='facebook'){
+toast('Facebook登录开发中，请使用手机号注册','info');
+}else if(provider==='twitter'){
+toast('X/Twitter登录开发中，请使用手机号注册','info');
+}
+}
+
+// Handle OAuth callback - extract token from URL hash
+function handleOAuthCallback(){
+const hash=window.location.hash;
+if(hash && hash.includes('access_token')){
+const params=new URLSearchParams(hash.substring(1));
+const accessToken=params.get('access_token');
+const state=params.get('state');
+const storedState=localStorage.getItem('oauth_state');
+const provider=localStorage.getItem('oauth_provider');
+// Clear hash and state
+window.location.hash='';
+localStorage.removeItem('oauth_state');
+localStorage.removeItem('oauth_provider');
+// Validate state
+if(state!==storedState){
+toast('OAuth状态验证失败','error');
+return;
+}
+// Get user info from provider
+if(provider==='google'&&accessToken){
+fetch('https://www.googleapis.com/oauth2/v3/userinfo',{
+headers:{'Authorization':'Bearer '+accessToken}
+})
+.then(r=>r.json())
+.then(user=>{
+// Send to backend
+return fetch(API+'/auth/google',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({
+google_id:user.sub,
+email:user.email,
+name:user.name,
+picture:user.picture
+})
+});
+})
+.then(r=>r.json())
+.then(data=>{
+if(data.success){
+localStorage.setItem('token',data.data.token);
+localStorage.setItem('userName',data.data.name||data.data.email);
+toast('登录成功！','success');
+location.reload();
+}else{
+toast(data.message||'登录失败','error');
+}
+})
+.catch(e=>{
+console.error(e);
+toast('第三方登录失败','error');
+});
+}
+}
+
+
+// Customer service
+function toggleCS(){
+document.getElementById('csWindow').classList.toggle('open');
+if(document.getElementById('csWindow').classList.contains('open')){
+initCS();
+}
+}
+
+function setCSLang(l){
+csLang=l;
+document.querySelectorAll('.cs-lang-btn').forEach(b=>b.classList.toggle('active',b.textContent.includes(l==='zh'?'中文':l==='en'?'EN':l==='ko'?'한국어':l==='ja'?'日本語':l==='es'?'ES':l==='ar'?'AR':l==='ru'?'RU':'FR')));
+document.getElementById('csMessages').innerHTML='';
+addCSMessage('bot',csResponses[csLang]?.welcome||csResponses.zh.welcome);
+renderCSQuick();
+}
+
+function initCS(){
+addCSMessage('bot',csResponses[csLang]?.welcome||csResponses.zh.welcome);
+renderCSQuick();
+}
+
+function renderCSQuick(){
+const btns=csQuickBtns[csLang]||csQuickBtns.en;
+document.getElementById('csQuick').innerHTML=btns.map(b=>`<button class="cs-quick-btn" onclick="sendCS('${b}')">${b}</button>`).join('');
+}
+
+function addCSMessage(type,text){
+const msg=document.createElement('div');
+msg.className='cs-message '+type;
+msg.innerHTML=`<div class="cs-avatar"><i class="fas ${type==='bot'?'fa-headset':'fa-user'}"></i></div><div class="cs-bubble">${text.replace(/\n/g,'<br>')}</div>`;
+document.getElementById('csMessages').appendChild(msg);
+document.getElementById('csMessages').scrollTop=document.getElementById('csMessages').scrollHeight;
+}
+
+function sendCS(text){
+addCSMessage('user',text);
+setTimeout(()=>{
+let response=csResponses[csLang]?.default||csResponses.zh.default;
+if(text.includes('运费')||text.includes('Price')||text.includes('운임'))response=csResponses[csLang]?.shipping||csResponses.zh.shipping;
+else if(text.includes('禁运')||text.includes('Prohibited')||text.includes('금지'))response=csResponses[csLang]?.prohibited||csResponses.zh.prohibited;
+else if(text.includes('微信')||text.includes('Contact')||text.includes('고객'))response=csResponses[csLang]?.contact||csResponses.zh.contact;
+addCSMessage('bot',response);
+},500);
+}
+
+function sendCSMsg(){
+const input=document.getElementById('csInput');
+if(input.value.trim()){sendCS(input.value);input.value='';}
+}
+
+function toast(msg,type='success'){const t=document.createElement('div');t.className='toast '+type;t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3000)}
+
+function openModal(m){closeModal('login');closeModal('register');document.getElementById(m+'Modal').classList.add('open')}
+function closeModal(m){document.getElementById(m+'Modal')?.classList.remove('open')}
+function switchModal(m){closeModal(m==='login'?'register':'login');openModal(m)}
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open')}));
+
+async function calculate(){
+const c=document.getElementById('calcCountry').value,w=parseFloat(document.getElementById('calcWeight').value)||1,m=document.getElementById('calcMethod').value;
+try{
+const r=await fetch(API+'/calculate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({country_code:c,weight:w,method:m})});
+const d=await r.json();
+if(d.success){document.getElementById('calcResult').classList.remove('hidden');document.getElementById('calcPrice').textContent='¥'+d.data.totalFee;document.getElementById('calcDetail').textContent=`基础运费: ¥${d.data.baseFee} | 预计${d.data.days}天`}
+}catch(e){toast('Network error, please try again','error')}
+}
+
+async function handleLogin(){
+const a=document.getElementById('loginAccount').value,p=document.getElementById('loginPassword').value;
+if(!a||!p){toast('Please fill all fields','error');return}
+try{
+const r=await fetch(API+'/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({account:a,password:p})});
+const d=await r.json();
+if(d.success){localStorage.setItem('token',d.data.token);localStorage.setItem('userName',d.data.name||d.data.email);closeModal('login');toast('Login successful!','success');location.reload()}
+else toast(d.message||'Login failed','error')
+}catch(e){toast('Network error','error')}
+}
+
+async function handleRegister(){
+const code=document.getElementById('regCode').value,phone=document.getElementById('regPhone').value,email=document.getElementById('regEmail').value,pw=document.getElementById('regPassword').value,name=document.getElementById('regName').value;
+if(!phone){toast('Please enter phone number','error');return}
+if(!pw||pw.length<6){toast('Password must be at least 6 characters','error');return}
+try{
+const r=await fetch(API+'/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({country_code:code,phone,email,password:pw,name})});
+const d=await r.json();
+if(d.success){closeModal('register');toast('Registration successful! Please login.','success');setTimeout(()=>openModal('login'),500)}
+else toast(d.message||'Registration failed','error')
+}catch(e){toast('Network error','error')}
+}
+
+document.addEventListener('DOMContentLoaded',()=>{applyLang();handleOAuthCallback();});
+</script>
+</body>
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CN2Global - 中国转运全球</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        *{font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+        .chat-btn{position:fixed;bottom:20px;right:20px;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,.2);font-size:24px;z-index:1000}
+        .chat-btn:hover{transform:scale(1.1)}
+        .chat-panel{position:fixed;bottom:90px;right:20px;width:340px;max-height:500px;background:white;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.2);display:none;z-index:1000;flex-direction:column}
+        .chat-panel.active{display:flex}
+    </style>
+</head>
+<body class="bg-white">
+    <div id="root"></div>
+    
+    <button class="chat-btn" id="chatBtn">Chat</button>
+    <div class="chat-panel" id="chatPanel">
+        <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:16px;border-radius:16px 16px 0 0">
+            <h3 style="margin:0;font-size:18px">CN2Global Support</h3>
+            <p style="margin:4px 0 0;font-size:13px;opacity:.9">Working: 9:00-22:00 (GMT+8)</p>
+        </div>
+        <div style="padding:16px;overflow-y:auto;flex:1">
+            <div id="chatMessages" style="margin-bottom:12px">
+                <div style="background:#f3f4f6;padding:10px 14px;border-radius:12px;margin-bottom:8px">
+                    Hello! Welcome to CN2Global. How can I help you?
+                </div>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+                <button onclick="sendMsg('Shipping rates')" style="background:#e0e7ff;color:#3730a3;padding:6px 12px;border:none;border-radius:16px;cursor:pointer;font-size:13px">Rates</button>
+                <button onclick="sendMsg('Warehouse address')" style="background:#e0e7ff;color:#3730a3;padding:6px 12px;border:none;border-radius:16px;cursor:pointer;font-size:13px">Address</button>
+                <button onclick="sendMsg('Prohibited items')" style="background:#e0e7ff;color:#3730a3;padding:6px 12px;border:none;border-radius:16px;cursor:pointer;font-size:13px">Prohibited</button>
+            </div>
+            <div style="display:flex;gap:8px">
+                <input type="text" id="chatInput" placeholder="Type message..." style="flex:1;padding:10px 14px;border:1px solid #d1d5db;border-radius:20px;outline:none" onkeypress="if(event.key==='Enter')sendMsg()">
+                <button onclick="sendMsg()" style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;padding:10px 20px;border-radius:20px;cursor:pointer;font-weight:600">Send</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('chatBtn').onclick = function() {
+            document.getElementById('chatPanel').classList.toggle('active');
+        };
+        
+        function sendMsg(text) {
+            const input = document.getElementById('chatInput');
+            const msg = text || input.value.trim();
+            if (!msg) return;
+            
+            const container = document.getElementById('chatMessages');
+            container.innerHTML += '<div style="background:#2563eb;color:white;padding:10px 14px;border-radius:12px;margin-bottom:8px;margin-left:40px">' + msg + '</div>';
+            input.value = '';
+            
+            setTimeout(function() {
+                const replies = {
+                    'Shipping rates': 'Air: 68-118 CNY first kg, Sea: 138-228 CNY first kg. Check the Pricing page for details.',
+                    'Warehouse address': 'Warehouse: Qingdao City, Shandong Province. Detailed address available after registration.',
+                    'Prohibited items': 'Prohibited: Flammables, weapons, drugs, fresh food, counterfeits. Restricted: Cosmetics under 100ml, perfumes under 100ml.'
+                };
+                const reply = replies[msg] || 'Thank you for your message! For more help, contact us: Telegram @cn2global, WeChat: cn2global, Email: service@cn2g.com';
+                container.innerHTML += '<div style="background:#f3f4f6;padding:10px 14px;border-radius:12px;margin-bottom:8px">' + reply + '</div>';
+                container.scrollTop = container.scrollHeight;
+            }, 500);
+        }
+    </script>
+    
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <script type="text/babel">
+        const {useState} = React;
+        
+        const rates = {
+            'US': {n: 'USA', air: {b: 118, p: 75}, sea: {b: 198, p: 18}, express: {b: 158, p: 95}, line: {b: 98, p: 55}, days: {air: '7-12', sea: '25-35', express: '5-7', line: '10-15'}},
+            'UK': {n: 'UK', air: {b: 108, p: 68}, sea: {b: 188, p: 15}, express: {b: 148, p: 88}, line: {b: 88, p: 48}, days: {air: '8-14', sea: '30-40', express: '5-8', line: '12-18'}},
+            'DE': {n: 'Germany', air: {b: 108, p: 68}, sea: {b: 188, p: 15}, express: {b: 148, p: 88}, line: {b: 88, p: 48}, days: {air: '8-14', sea: '30-40', express: '5-8', line: '12-18'}},
+            'JP': {n: 'Japan', air: {b: 78, p: 45}, sea: {b: 168, p: 8}, express: {b: 128, p: 65}, line: {b: 58, p: 35}, days: {air: '3-5', sea: '10-15', express: '2-3', line: '5-8'}},
+            'KR': {n: 'Korea', air: {b: 78, p: 45}, sea: {b: 168, p: 8}, express: {b: 128, p: 65}, line: {b: 58, p: 35}, days: {air: '3-5', sea: '8-12', express: '2-3', line: '5-8'}},
+            'AU': {n: 'Australia', air: {b: 108, p: 65}, sea: {b: 198, p: 12}, express: {b: 158, p: 85}, line: {b: 88, p: 45}, days: {air: '7-12', sea: '20-30', express: '5-7', line: '10-15'}},
+            'CA': {n: 'Canada', air: {b: 118, p: 72}, sea: {b: 198, p: 16}, express: {b: 158, p: 92}, line: {b: 98, p: 52}, days: {air: '8-14', sea: '30-45', express: '5-8', line: '12-18'}},
+            'SG': {n: 'Singapore', air: {b: 68, p: 38}, sea: {b: 158, p: 6}, express: {b: 108, p: 55}, line: {b: 48, p: 28}, days: {air: '3-5', sea: '8-12', express: '2-3', line: '5-7'}},
+            'MY': {n: 'Malaysia', air: {b: 68, p: 40}, sea: {b: 158, p: 7}, express: {b: 108, p: 58}, line: {b: 48, p: 30}, days: {air: '4-6', sea: '10-15', express: '3-4', line: '6-8'}},
+            'TH': {n: 'Thailand', air: {b: 68, p: 42}, sea: {b: 158, p: 8}, express: {b: 108, p: 60}, line: {b: 48, p: 32}, days: {air: '4-6', sea: '12-18', express: '3-4', line: '6-10'}},
+            'VN': {n: 'Vietnam', air: {b: 58, p: 35}, sea: {b: 148, p: 5}, express: {b: 98, p: 50}, line: {b: 38, p: 25}, days: {air: '3-5', sea: '8-12', express: '2-3', line: '4-6'}},
+            'NZ': {n: 'New Zealand', air: {b: 118, p: 72}, sea: {b: 208, p: 14}, express: {b: 168, p: 92}, line: {b: 98, p: 52}, days: {air: '8-12', sea: '25-35', express: '5-8', line: '12-18'}},
+            'TW': {n: 'Taiwan', air: {b: 58, p: 32}, sea: {b: 148, p: 5}, express: {b: 98, p: 48}, line: {b: 38, p: 22}, days: {air: '2-3', sea: '5-8', express: '1-2', line: '3-5'}},
+            'HK': {n: 'Hong Kong', air: {b: 48, p: 28}, sea: {b: 138, p: 4}, express: {b: 88, p: 42}, line: {b: 28, p: 18}, days: {air: '1-2', sea: '3-5', express: '1', line: '2-3'}},
+        };
+        
+        const destinations = Object.keys(rates);
+        
+        function App() {
+            const [page, setPage] = useState('home');
+            const [price, setPrice] = useState(null);
+            const [calc, setCalc] = useState({dest: 'US', weight: 1, service: 'air'});
+            
+            const calcPrice = () => {
+                const r = rates[calc.dest][calc.service];
+                setPrice(r.b + Math.max(0, calc.weight - 1) * r.p);
+            };
+            
+            return (
+                <div style={{minHeight: '100vh', background: 'white'}}>
+                    <nav style={{position: 'fixed', top: 0, left: 0, right: 0, background: 'white', boxShadow: '0 1px 3px rgba(0,0,0,.1)', zIndex: 50}}>
+                        <div style={{maxWidth: 1200, margin: '0 auto', padding: '0 16px', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                            <div style={{fontSize: 24, fontWeight: 'bold', color: '#2563eb', cursor: 'pointer'}} onClick={() => setPage('home')}>CN2Global</div>
+                            <div style={{display: 'flex', gap: 16}}>
+                                <button onClick={() => setPage('home')} style={{background: 'none', border: 'none', cursor: 'pointer', color: '#374151'}}>Home</button>
+                                <button onClick={() => setPage('services')} style={{background: 'none', border: 'none', cursor: 'pointer', color: '#374151'}}>Services</button>
+                                <button onClick={() => setPage('price')} style={{background: 'none', border: 'none', cursor: 'pointer', color: '#374151'}}>Pricing</button>
+                            </div>
+                            <div>
+                                <button style={{color: '#2563eb', background: 'none', border: 'none', cursor: 'pointer', marginRight: 8}}>Login</button>
+                                <button style={{background: '#2563eb', color: 'white', padding: '8px 16px', border: 'none', borderRadius: 8, cursor: 'pointer'}}>Register</button>
+                            </div>
+                        </div>
+                    </nav>
+                    
+                    {page === 'home' && (
+                        <div style={{paddingTop: 64}}>
+                            <section style={{background: 'linear-gradient(135deg, #2563eb, #1d4ed8)', color: 'white', padding: '80px 16px', textAlign: 'center'}}>
+                                <h1 style={{fontSize: 48, marginBottom: 16, fontWeight: 'bold'}}>Ship from China to Global</h1>
+                                <p style={{fontSize: 20, marginBottom: 8, opacity: .9}}>Professional International Forwarding Service</p>
+                                <p style={{fontSize: 14, marginBottom: 32, opacity: .8}}>From: Qingdao, Shandong, China | 15+ Countries</p>
+                                <div style={{display: 'flex', gap: 16, justifyContent: 'center'}}>
+                                    <button onClick={() => setPage('price')} style={{background: 'white', color: '#2563eb', padding: '14px 28px', border: 'none', borderRadius: 12, fontWeight: 600, cursor: 'pointer', fontSize: 16}}>Get Quote</button>
+                                    <button onClick={() => setPage('services')} style={{border: '2px solid white', color: 'white', padding: '14px 28px', borderRadius: 12, fontWeight: 600, cursor: 'pointer', fontSize: 16, background: 'transparent'}}>Services</button>
+                                </div>
+                            </section>
+                            
+                            <section style={{padding: '32px 16px', background: '#f0fdf4'}}>
+                                <div style={{maxWidth: 600, margin: '0 auto', background: 'white', borderRadius: 16, boxShadow: '0 4px 6px rgba(0,0,0,.1)', padding: 24, borderLeft: '4px solid #22c55e'}}>
+                                    <h3 style={{margin: '0 0 12px', fontSize: 18, fontWeight: 'bold', color: '#166534'}}>Warehouse Address</h3>
+                                    <div style={{color: '#374151', lineHeight: 1.8}}>
+                                        <p style={{margin: '4px 0'}}><strong>Address:</strong> Qingdao City, Shandong Province (Details after login)</p>
+                                        <p style={{margin: '4px 0'}}><strong>Recipient:</strong> Your User ID</p>
+                                    </div>
+                                    <p style={{margin: '12px 0 0', fontSize: 13, color: '#666'}}>Register to get your exclusive warehouse address</p>
+                                </div>
+                            </section>
+                            
+                            <section style={{padding: '48px 16px', background: '#f9fafb'}}>
+                                <div style={{maxWidth: 600, margin: '0 auto', background: 'white', borderRadius: 16, boxShadow: '0 4px 6px rgba(0,0,0,.1)', padding: 24}}>
+                                    <h2 style={{fontSize: 20, fontWeight: 'bold', textAlign: 'center', marginBottom: 24}}>Quick Quote</h2>
+                                    <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 12, marginBottom: 16}}>
+                                        <select value={calc.dest} onChange={e => setCalc({...calc, dest: e.target.value})} style={{padding: 12, border: '1px solid #d1d5db', borderRadius: 8}}>
+                                            {destinations.map(d => <option key={d} value={d}>{rates[d].n}</option>)}
+                                        </select>
+                                        <input type="number" value={calc.weight} onChange={e => setCalc({...calc, weight: Number(e.target.value)})} style={{padding: 12, border: '1px solid #d1d5db', borderRadius: 8}} placeholder="Weight (kg)" min="0.1" step="0.1"/>
+                                        <select value={calc.service} onChange={e => setCalc({...calc, service: e.target.value})} style={{padding: 12, border: '1px solid #d1d5db', borderRadius: 8}}>
+                                            <option value="air">Air</option>
+                                            <option value="sea">Sea</option>
+                                            <option value="express">Express</option>
+                                            <option value="line">Line</option>
+                                        </select>
+                                        <button onClick={calcPrice} style={{background: '#2563eb', color: 'white', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer'}}>Calculate</button>
+                                    </div>
+                                    {price && (
+                                        <div style={{padding: 16, background: '#f0fdf4', borderRadius: 12, textAlign: 'center'}}>
+                                            <div style={{color: '#166534', marginBottom: 8}}>Estimated Cost</div>
+                                            <div style={{fontSize: 32, fontWeight: 'bold', color: '#22c55e'}}>CNY {price}</div>
+                                            <div style={{fontSize: 13, color: '#666', marginTop: 8}}>Delivery: {rates[calc.dest].days[calc.service]} days</div>
+                                        </div>
+                                    )}
+                                </div>
+                            </section>
+                            
+                            <section style={{padding: '48px 16px'}}>
+                                <h2 style={{fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 32}}>Why Choose Us</h2>
+                                <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 24, maxWidth: 1000, margin: '0 auto'}}>
+                                    <div style={{textAlign: 'center', padding: 24}}>
+                                        <div style={{fontSize: 48, marginBottom: 12}}>Globe</div>
+                                        <h3 style={{fontWeight: 600, marginBottom: 8}}>7 Languages</h3>
+                                        <p style={{color: '#666', fontSize: 14}}>CN, EN, JP, KR, VI, ES, ID</p>
+                                    </div>
+                                    <div style={{textAlign: 'center', padding: 24}}>
+                                        <div style={{fontSize: 48, marginBottom: 12}}>Box</div>
+                                        <h3 style={{fontWeight: 600, marginBottom: 8}}>Free Consolidation</h3>
+                                        <p style={{color: '#666', fontSize: 14'>Smart packing, reinforcement</p>
+                                    </div>
+                                    <div style={{textAlign: 'center', padding: 24}}>
+                                        <div style={{fontSize: 48, marginBottom: 12}}>Track</div>
+                                        <h3 style={{fontWeight: 600, marginBottom: 8}}>Full Tracking</h3>
+                                        <p style={{color: '#666', fontSize: 14}}>Real-time updates</p>
+                                    </div>
+                                    <div style={{textAlign: 'center', padding: 24}}>
+                                        <div style={{fontSize: 48, marginBottom: 12}}>Pay</div>
+                                        <h3 style={{fontWeight: 600, marginBottom: 8'}}>Secure Payment</h3>
+                                        <p style={{color: '#666', fontSize: 14'}}>WeChat, Alipay, PayPal</p>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    )}
+                    
+                    {page === 'services' && (
+                        <div style={{paddingTop: 80, padding: '80px 16px', maxWidth: 1000, margin: '0 auto'}}>
+                            <h1 style={{fontSize: 32, fontWeight: 'bold', marginBottom: 32}}>Our Services</h1>
+                            <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24}}>
+                                <div style={{border: '1px solid #e5e7eb', borderRadius: 16, padding: 24}}>
+                                    <h3 style={{fontWeight: 'bold', fontSize: 18, marginBottom: 8}}>Package Reception</h3>
+                                    <p style={{color: '#666'}}>Receive packages from Taobao, JD, Pinduoduo at our Qingdao warehouse</p>
+                                </div>
+                                <div style={{border: '1px solid #e5e7eb', borderRadius: 16, padding: 24}}>
+                                    <h3 style={{fontWeight: 'bold', fontSize: 18, marginBottom: 8'}}>Consolidation</h3>
+                                    <p style={{color: '#666'}}>Free consolidation, packaging removal, and reinforcement services</p>
+                                </div>
+                                <div style={{border: '1px solid #e5e7eb', borderRadius: 16, padding: 24}}>
+                                    <h3 style={{fontWeight: 'bold', fontSize: 18, marginBottom: 8'}}>International Shipping</h3>
+                                    <p style={{color: '#666'}}>Air, Sea, Express, and Line options to 15+ countries</p>
+                                </div>
+                                <div style={{border: '1px solid #e5e7eb', borderRadius: 16, padding: 24}}>
+                                    <h3 style={{fontWeight: 'bold', fontSize: 18, marginBottom: 8'}}>Full Tracking</h3>
+                                    <p style={{color: '#666'}}>Real-time tracking with multi-language support</p>
+                                </div>
+                                <div style={{border: '1px solid #e5e7eb', borderRadius: 16, padding: 24}}>
+                                    <h3 style={{fontWeight: 'bold', fontSize: 18, marginBottom: 8'}}>Customs Clearance</h3>
+                                    <p style={{color: '#666'}}>Professional customs handling and documentation</p>
+                                </div>
+                                <div style={{border: '1px solid #e5e7eb', borderRadius: 16, padding: 24}}>
+                                    <h3 style={{fontWeight: 'bold', fontSize: 18, marginBottom: 8'}}>Payment Options</h3>
+                                    <p style={{color: '#666'}}>WeChat Pay, Alipay, PayPal, Credit Card</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    
+                    {page === 'price' && (
+                        <div style={{paddingTop: 80, padding: '80px 16px', maxWidth: 1200, margin: '0 auto'}}>
+                            <h1 style={{fontSize: 32, fontWeight: 'bold', marginBottom: 8, textAlign: 'center'}}>Shipping Rates</h1>
+                            <p style={{textAlign: 'center', color: '#666', marginBottom: 32}}>From: Qingdao, China | Rates include 30 CNY handling fee</p>
+                            
+                            <div style={{overflowX: 'auto'}}>
+                                <table style={{width: '100%', borderCollapse: 'collapse', background: 'white', borderRadius: 12, overflow: 'hidden', boxShadow: '0 4px 6px rgba(0,0,0,.1)'}}>
+                                    <thead>
+                                        <tr style={{background: '#2563eb', color: 'white'}}>
+                                            <th style={{padding: 12, textAlign: 'left'}}>Destination</th>
+                                            <th style={{padding: 12, textAlign: 'center'}}>Air (First/Add)</th>
+                                            <th style={{padding: 12, textAlign: 'center'}}>Sea (First/Add)</th>
+                                            <th style={{padding: 12, textAlign: 'center'}}>Express (First/Add)</th>
+                                            <th style={{padding: 12, textAlign: 'center'}}>Line (First/Add)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {destinations.map((d, i) => (
+                                            <tr key={d} style={{background: i % 2 === 0 ? 'white' : '#f9fafb'}}>
+                                                <td style={{padding: 12, fontWeight: 500}}>{rates[d].n}</td>
+                                                <td style={{padding: 12, textAlign: 'center', fontSize: 14}}>
+                                                    {rates[d].air.b}/{rates[d].air.p}<br/>
+                                                    <span style={{color: '#666', fontSize: 12}}>{rates[d].days.air} days</span>
+                                                </td>
+                                                <td style={{padding: 12, textAlign: 'center', fontSize: 14}}>
+                                                    {rates[d].sea.b}/{rates[d].sea.p}<br/>
+                                                    <span style={{color: '#666', fontSize: 12}}>{rates[d].days.sea} days</span>
+                                                </td>
+                                                <td style={{padding: 12, textAlign: 'center', fontSize: 14}}>
+                                                    {rates[d].express.b}/{rates[d].express.p}<br/>
+                                                    <span style={{color: '#666', fontSize: 12}}>{rates[d].days.express} days</span>
+                                                </td>
+                                                <td style={{padding: 12, textAlign: 'center', fontSize: 14}}>
+                                                    {rates[d].line.b}/{rates[d].line.p}<br/>
+                                                    <span style={{color: '#666', fontSize: 12}}>{rates[d].days.line} days</span>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p style={{fontSize: 13, color: '#666', marginTop: 16, textAlign: 'center'}}>First kg price / Additional kg price (CNY)</p>
+                        </div>
+                    )}
+                    
+                    <footer style={{background: '#1f2937', color: '#9ca3af', padding: '48px 16px', marginTop: 'auto'}}>
+                        <div style={{maxWidth: 1200, margin: '0 auto', textAlign: 'center'}}>
+                            <p style={{fontSize: 24, fontWeight: 'bold', color: 'white', marginBottom: 16}}>CN2Global</p>
+                            <p style={{fontSize: 14, marginBottom: 8}}>Qingdao, Shandong, China | Professional International Forwarding</p>
+                            <p style={{fontSize: 13}}>Contact: Telegram @cn2global | WeChat: cn2global | Email: service@cn2g.com</p>
+                            <p style={{fontSize: 12, marginTop: 16}}>2026 CN2Global. All rights reserved.</p>
+                        </div>
+                    </footer>
+                </div>
+            );
+        }
+        
+        ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+    </script>
+</body>
+</html>

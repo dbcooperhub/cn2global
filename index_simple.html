@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CN2Global - 中国转运全球</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f5f7; color: #1d1d1f; }
+        
+        /* Navigation */
+        .nav { position: fixed; top: 0; left: 0; right: 0; height: 48px; background: rgba(255,255,255,0.9); backdrop-filter: blur(20px); z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.1); display: flex; align-items: center; padding: 0 24px; }
+        .nav-logo { font-size: 21px; font-weight: 600; color: #0071e3; cursor: pointer; }
+        .nav-links { display: flex; gap: 32px; margin-left: auto; }
+        .nav-links a { font-size: 12px; color: #1d1d1f; text-decoration: none; cursor: pointer; }
+        .nav-links a:hover { opacity: 0.7; }
+        .nav-btns { display: flex; gap: 12px; margin-left: 24px; }
+        .btn { padding: 8px 16px; font-size: 12px; border-radius: 980px; border: none; cursor: pointer; font-weight: 500; }
+        .btn-primary { background: #0071e3; color: white; }
+        .btn-outline { background: transparent; border: 1px solid #0071e3; color: #0071e3; }
+        
+        /* Hero */
+        .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 100px 24px 60px; background: linear-gradient(180deg, #fbfbfd 0%, #fff 100%); }
+        .hero-tag { font-size: 17px; font-weight: 600; color: #0071e3; margin-bottom: 8px; }
+        .hero-title { font-size: clamp(40px, 8vw, 64px); font-weight: 700; letter-spacing: -1px; margin-bottom: 16px; }
+        .hero-sub { font-size: clamp(18px, 3vw, 24px); color: #86868b; max-width: 600px; margin-bottom: 32px; }
+        .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+        .btn-large { padding: 16px 32px; font-size: 16px; }
+        
+        /* Stats */
+        .stats { margin-top: 48px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 20px; padding: 32px; max-width: 800px; width: 100%; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; background: white; border-radius: 12px; padding: 24px; }
+        .stat { text-align: center; }
+        .stat-value { font-size: 36px; font-weight: 700; color: #1d1d1f; }
+        .stat-label { font-size: 14px; color: #86868b; margin-top: 4px; }
+        
+        /* Section */
+        .section { padding: 80px 24px; }
+        .section-gray { background: #f5f5f7; }
+        .section-header { text-align: center; margin-bottom: 48px; }
+        .section-title { font-size: clamp(28px, 4vw, 40px); font-weight: 700; letter-spacing: -1px; margin-bottom: 12px; }
+        .section-sub { font-size: 17px; color: #86868b; max-width: 600px; margin: 0 auto; }
+        .container { max-width: 1024px; margin: 0 auto; }
+        
+        /* Features */
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+        .feature { background: white; border-radius: 16px; padding: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: transform 0.2s; }
+        .feature:hover { transform: translateY(-4px); }
+        .feature-icon { font-size: 32px; margin-bottom: 12px; }
+        .feature-title { font-size: 17px; font-weight: 600; margin-bottom: 6px; }
+        .feature-desc { font-size: 14px; color: #86868b; line-height: 1.5; }
+        
+        /* Calculator */
+        .calc { background: white; border-radius: 16px; padding: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-label { font-size: 11px; font-weight: 600; color: #86868b; text-transform: uppercase; }
+        .form-select, .form-input { padding: 12px; border: 1px solid #d2d2d7; border-radius: 8px; font-size: 14px; }
+        .form-select:focus, .form-input:focus { outline: none; border-color: #0071e3; }
+        .price-result { text-align: center; padding: 24px; background: #f5f5f7; border-radius: 12px; margin-top: 20px; }
+        .price-value { font-size: 40px; font-weight: 700; color: #0071e3; }
+        .price-detail { font-size: 13px; color: #86868b; margin-top: 8px; }
+        
+        /* Steps */
+        .steps { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+        .step { text-align: center; }
+        .step-num { width: 60px; height: 60px; background: white; border: 2px solid #0071e3; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; color: #0071e3; margin: 0 auto 12px; }
+        .step-title { font-size: 15px; font-weight: 600; }
+        
+        /* Footer */
+        .footer { background: #1d1d1f; color: #86868b; padding: 40px 24px; text-align: center; }
+        .footer-brand { font-size: 20px; font-weight: 600; color: white; margin-bottom: 8px; }
+        
+        /* Chat */
+        .chat-btn { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; font-size: 24px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; }
+        .chat-panel { position: fixed; bottom: 90px; right: 24px; width: 340px; max-height: 500px; background: white; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); display: none; flex-direction: column; z-index: 999; }
+        .chat-panel.active { display: flex; }
+        .chat-header { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 16px; border-radius: 16px 16px 0 0; }
+        .chat-body { padding: 16px; flex: 1; overflow-y: auto; }
+        .chat-msg { padding: 10px 14px; border-radius: 12px; margin-bottom: 8px; font-size: 14px; }
+        .chat-msg.bot { background: #f5f5f7; }
+        .chat-msg.user { background: #0071e3; color: white; margin-left: auto; max-width: 80%; }
+        .chat-quick { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+        .chat-quick button { padding: 6px 12px; background: rgba(0,113,227,0.1); color: #0071e3; border: none; border-radius: 16px; font-size: 12px; cursor: pointer; }
+        .chat-quick button:hover { background: #0071e3; color: white; }
+        .chat-input { display: flex; gap: 8px; }
+        .chat-input input { flex: 1; padding: 10px 14px; border: 1px solid #d2d2d7; border-radius: 16px; font-size: 14px; }
+        .chat-input button { width: 36px; height: 36px; border-radius: 50%; background: #0071e3; color: white; border: none; cursor: pointer; }
+        
+        @media (max-width: 600px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .steps { gap: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-logo" onclick="showPage('home')">CN2Global</div>
+        <div class="nav-links">
+            <a onclick="showPage('home')">首页</a>
+            <a onclick="showPage('services')">服务</a>
+            <a onclick="showPage('pricing')">运费</a>
+            <a onclick="showPage('help')">帮助</a>
+        </div>
+        <div class="nav-btns">
+            <button class="btn btn-outline">登录</button>
+            <button class="btn btn-primary">注册</button>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div id="main"></div>
+    
+    <!-- Chat Button -->
+    <button class="chat-btn" onclick="toggleChat()">💬</button>
+    
+    <!-- Chat Panel -->
+    <div class="chat-panel" id="chatPanel">
+        <div class="chat-header">
+            <div style="font-weight:600">CN2Global 客服</div>
+            <div style="font-size:12px;opacity:0.9">工作时间: 9:00-22:00</div>
+        </div>
+        <div class="chat-body">
+            <div id="chatMessages">
+                <div class="chat-msg bot">您好！欢迎来到CN2Global。有什么可以帮您？</div>
+            </div>
+            <div class="chat-quick">
+                <button onclick="sendMsg('运费查询')">💰 运费</button>
+                <button onclick="sendMsg('仓库地址')">📦 地址</button>
+                <button onclick="sendMsg('禁运品')">🚫 禁运</button>
+                <button onclick="sendMsg('操作流程')">📖 流程</button>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="chatInput" placeholder="输入消息..." onkeypress="if(event.key==='Enter')sendMsg()">
+                <button onclick="sendMsg()">➤</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Rates Data
+        const rates = {
+            'US': {n:'美国', air:{b:118,p:75}, sea:{b:198,p:18}, express:{b:158,p:95}, line:{b:98,p:55}, days:{air:'7-12',sea:'25-35',express:'5-7',line:'10-15'}},
+            'UK': {n:'英国', air:{b:108,p:68}, sea:{b:188,p:15}, express:{b:148,p:88}, line:{b:88,p:48}, days:{air:'8-14',sea:'30-40',express:'5-8',line:'12-18'}},
+            'DE': {n:'德国', air:{b:108,p:68}, sea:{b:188,p:15}, express:{b:148,p:88}, line:{b:88,p:48}, days:{air:'8-14',sea:'30-40',express:'5-8',line:'12-18'}},
+            'JP': {n:'日本', air:{b:78,p:45}, sea:{b:168,p:8}, express:{b:128,p:65}, line:{b:58,p:35}, days:{air:'3-5',sea:'10-15',express:'2-3',line:'5-8'}},
+            'KR': {n:'韩国', air:{b:78,p:45}, sea:{b:168,p:8}, express:{b:128,p:65}, line:{b:58,p:35}, days:{air:'3-5',sea:'8-12',express:'2-3',line:'5-8'}},
+            'AU': {n:'澳大利亚', air:{b:108,p:65}, sea:{b:198,p:12}, express:{b:158,p:85}, line:{b:88,p:45}, days:{air:'7-12',sea:'20-30',express:'5-7',line:'10-15'}},
+            'CA': {n:'加拿大', air:{b:118,p:72}, sea:{b:198,p:16}, express:{b:158,p:92}, line:{b:98,p:52}, days:{air:'8-14',sea:'30-45',express:'5-8',line:'12-18'}},
+            'SG': {n:'新加坡', air:{b:68,p:38}, sea:{b:158,p:6}, express:{b:108,p:55}, line:{b:48,p:28}, days:{air:'3-5',sea:'8-12',express:'2-3',line:'5-7'}},
+            'MY': {n:'马来西亚', air:{b:68,p:40}, sea:{b:158,p:7}, express:{b:108,p:58}, line:{b:48,p:30}, days:{air:'4-6',sea:'10-15',express:'3-4',line:'6-8'}},
+            'TH': {n:'泰国', air:{b:68,p:42}, sea:{b:158,p:8}, express:{b:108,p:60}, line:{b:48,p:32}, days:{air:'4-6',sea:'12-18',express:'3-4',line:'6-10'}},
+            'VN': {n:'越南', air:{b:58,p:35}, sea:{b:148,p:5}, express:{b:98,p:50}, line:{b:38,p:25}, days:{air:'3-5',sea:'8-12',express:'2-3',line:'4-6'}},
+            'NZ': {n:'新西兰', air:{b:118,p:72}, sea:{b:208,p:14}, express:{b:168,p:92}, line:{b:98,p:52}, days:{air:'8-12',sea:'25-35',express:'5-8',line:'12-18'}},
+            'TW': {n:'台湾', air:{b:58,p:32}, sea:{b:148,p:5}, express:{b:98,p:48}, line:{b:38,p:22}, days:{air:'2-3',sea:'5-8',express:'1-2',line:'3-5'}},
+            'HK': {n:'香港', air:{b:48,p:28}, sea:{b:138,p:4}, express:{b:88,p:42}, line:{b:28,p:18}, days:{air:'1-2',sea:'3-5',express:'1',line:'2-3'}}
+        };
+        const destinations = Object.keys(rates);
+        
+        // Page Functions
+        function showPage(page) {
+            const main = document.getElementById('main');
+            if (page === 'home') {
+                main.innerHTML = `
+                    <section class="hero">
+                        <div class="hero-tag">国际集运转运服务</div>
+                        <h1 class="hero-title">中国转运全球</h1>
+                        <p class="hero-sub">专业、快速、安全。从青岛直达全球15+国家，让您的包裹轻松跨越国界。</p>
+                        <div class="hero-btns">
+                            <button class="btn btn-primary btn-large" onclick="showPage('pricing')">立即询价</button>
+                            <button class="btn btn-outline btn-large" onclick="showPage('services')">了解服务</button>
+                        </div>
+                        <div class="stats">
+                            <div class="stats-grid">
+                                <div class="stat"><div class="stat-value">15+</div><div class="stat-label">覆盖国家</div></div>
+                                <div class="stat"><div class="stat-value">7</div><div class="stat-label">支持语种</div></div>
+                                <div class="stat"><div class="stat-value">30天</div><div class="stat-label">免费仓储</div></div>
+                                <div class="stat"><div class="stat-value">24h</div><div class="stat-label">在线客服</div></div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="section section-gray">
+                        <div class="container">
+                            <div class="section-header">
+                                <h2 class="section-title">为什么选择我们</h2>
+                                <p class="section-sub">从包裹代收到国际运输，一站式专业服务</p>
+                            </div>
+                            <div class="features">
+                                <div class="feature"><div class="feature-icon">🌐</div><h3 class="feature-title">7大语种服务</h3><p class="feature-desc">支持中文、英文、日文、韩文、越南语、西班牙语、印尼语</p></div>
+                                <div class="feature"><div class="feature-icon">📦</div><h3 class="feature-title">智能合箱打包</h3><p class="feature-desc">免费合箱、加固、去除包装，专业打包节省运费</p></div>
+                                <div class="feature"><div class="feature-icon">📍</div><h3 class="feature-title">全程物流追踪</h3><p class="feature-desc">实时物流轨迹，多语言展示，随时掌握包裹动态</p></div>
+                                <div class="feature"><div class="feature-icon">💳</div><h3 class="feature-title">安全支付方式</h3><p class="feature-desc">支持微信、支付宝、PayPal、信用卡等多种支付</p></div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="section">
+                        <div class="container">
+                            <div class="section-header">
+                                <h2 class="section-title">快速询价</h2>
+                                <p class="section-sub">透明定价，无隐藏费用</p>
+                            </div>
+                            <div class="calc">
+                                <div class="calc-grid">
+                                    <div class="form-group"><label class="form-label">目的地</label><select class="form-select" id="destSelect">${destinations.map(d=>'<option value="'+d+'">'+rates[d].n+'</option>').join('')}</select></div>
+                                    <div class="form-group"><label class="form-label">重量</label><input type="number" class="form-input" id="weightInput" value="1" min="0.1" step="0.1"></div>
+                                    <div class="form-group"><label class="form-label">运输方式</label><select class="form-select" id="serviceSelect"><option value="air">空运</option><option value="sea">海运</option><option value="express">快递</option><option value="line">专线</option></select></div>
+                                    <div class="form-group" style="align-self:end"><button class="btn btn-primary" style="width:100%;padding:12px" onclick="calcPrice()">计算</button></div>
+                                </div>
+                                <div class="price-result" id="priceResult" style="display:none">
+                                    <div class="price-value">¥<span id="priceValue">0</span></div>
+                                    <div class="price-detail" id="priceDetail"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="section section-gray">
+                        <div class="container">
+                            <div class="section-header">
+                                <h2 class="section-title">简单四步，轻松转运</h2>
+                            </div>
+                            <div class="steps">
+                                <div class="step"><div class="step-num">1</div><div class="step-title">注册账号</div></div>
+                                <div class="step"><div class="step-num">2</div><div class="step-title">获取地址</div></div>
+                                <div class="step"><div class="step-num">3</div><div class="step-title">包裹入库</div></div>
+                                <div class="step"><div class="step-num">4</div><div class="step-title">支付发货</div></div>
+                            </div>
+                        </div>
+                    </section>
+                    <footer class="footer">
+                        <div class="footer-brand">CN2Global</div>
+                        <div>中国青岛 | 专业国际集运转运</div>
+                        <div style="margin-top:8px">Telegram: @cn2global | WeChat: cn2global</div>
+                    </footer>
+                `;
+            } else if (page === 'services') {
+                main.innerHTML = `
+                    <section class="section" style="padding-top:100px">
+                        <div class="container">
+                            <div class="section-header">
+                                <h2 class="section-title">我们的服务</h2>
+                            </div>
+                            <div class="features">
+                                <div class="feature"><div class="feature-icon">📦</div><h3 class="feature-title">包裹代收</h3><p class="feature-desc">支持淘宝、京东、拼多多等电商平台包裹代收</p></div>
+                                <div class="feature"><div class="feature-icon">✂️</div><h3 class="feature-title">智能合箱</h3><p class="feature-desc">免费合箱、加固、去除包装服务</p></div>
+                                <div class="feature"><div class="feature-icon">✈️</div><h3 class="feature-title">国际物流</h3><p class="feature-desc">空运、海运、快递、专线四种方式</p></div>
+                                <div class="feature"><div class="feature-icon">📍</div><h3 class="feature-title">全程追踪</h3><p class="feature-desc">实时物流轨迹，多语言展示</p></div>
+                                <div class="feature"><div class="feature-icon">🛃</div><h3 class="feature-title">清关服务</h3><p class="feature-desc">专业清关，报税配送一站式</p></div>
+                                <div class="feature"><div class="feature-icon">💳</div><h3 class="feature-title">支付方式</h3><p class="feature-desc">微信、支付宝、PayPal、信用卡</p></div>
+                            </div>
+                        </div>
+                    </section>
+                `;
+            } else if (page === 'pricing') {
+                main.innerHTML = `
+                    <section class="section" style="padding-top:100px">
+                        <div class="container">
+                            <div class="section-header">
+                                <h2 class="section-title">运费价格表</h2>
+                                <p class="section-sub">发货地：山东青岛 | 运费已含30元操作费</p>
+                            </div>
+                            <div style="overflow-x:auto;background:white;border-radius:16px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+                                <table style="width:100%;border-collapse:collapse">
+                                    <tr style="background:#f5f5f7"><th style="padding:12px;text-align:left">目的地</th><th style="padding:12px;text-align:center">空运</th><th style="padding:12px;text-align:center">海运</th><th style="padding:12px;text-align:center">快递</th><th style="padding:12px;text-align:center">专线</th></tr>
+                                    ${destinations.map(d => '<tr><td style="padding:10px;font-weight:500">'+rates[d].n+'</td><td style="padding:10px;text-align:center;font-size:13px">'+rates[d].air.b+'/'+rates[d].air.p+'<br><span style="color:#86868b">'+rates[d].days.air+'天</span></td><td style="padding:10px;text-align:center;font-size:13px">'+rates[d].sea.b+'/'+rates[d].sea.p+'<br><span style="color:#86868b">'+rates[d].days.sea+'天</span></td><td style="padding:10px;text-align:center;font-size:13px">'+rates[d].express.b+'/'+rates[d].express.p+'<br><span style="color:#86868b">'+rates[d].days.express+'天</span></td><td style="padding:10px;text-align:center;font-size:13px">'+rates[d].line.b+'/'+rates[d].line.p+'<br><span style="color:#86868b">'+rates[d].days.line+'天</span></td></tr>').join('')}
+                                </table>
+                            </div>
+                            <p style="text-align:center;font-size:12px;color:#86868b;margin-top:16px">首重1kg价格 / 续重每kg价格（单位：人民币）</p>
+                        </div>
+                    </section>
+                `;
+            } else if (page === 'help') {
+                main.innerHTML = `
+                    <section class="section" style="padding-top:100px">
+                        <div class="container">
+                            <div class="section-header">
+                                <h2 class="section-title">帮助中心</h2>
+                            </div>
+                            <div style="max-width:600px;margin:0 auto">
+                                <div class="feature" style="margin-bottom:12px"><h3 class="feature-title">📦 如何获取仓库地址？</h3><p class="feature-desc">注册登录后，在个人中心即可看到您的专属仓库地址。</p></div>
+                                <div class="feature" style="margin-bottom:12px"><h3 class="feature-title">💰 运费如何计算？</h3><p class="feature-desc">首重价格 + 续重 × 续重单价。具体价格请查看运费页面。</p></div>
+                                <div class="feature" style="margin-bottom:12px"><h3 class="feature-title">🚫 禁运品有哪些？</h3><p class="feature-desc">危险品、武器、毒品、生鲜食品、假冒伪劣商品等禁止邮寄。</p></div>
+                                <div class="feature" style="margin-bottom:12px"><h3 class="feature-title">📞 如何联系客服？</h3><p class="feature-desc">Telegram: @cn2global | 微信: cn2global | 邮箱: service@cn2g.com</p></div>
+                            </div>
+                        </div>
+                    </section>
+                `;
+            }
+        }
+        
+        // Calculate Price
+        function calcPrice() {
+            const dest = document.getElementById('destSelect').value;
+            const weight = parseFloat(document.getElementById('weightInput').value) || 1;
+            const service = document.getElementById('serviceSelect').value;
+            const r = rates[dest][service];
+            const price = r.b + Math.max(0, weight - 1) * r.p;
+            document.getElementById('priceValue').textContent = price;
+            document.getElementById('priceDetail').textContent = '首重¥' + r.b + ' + 续重¥' + r.p + '/kg | 时效: ' + rates[dest].days[service] + '天';
+            document.getElementById('priceResult').style.display = 'block';
+        }
+        
+        // Chat Functions
+        function toggleChat() { document.getElementById('chatPanel').classList.toggle('active'); }
+        
+        function sendMsg(text) {
+            const input = document.getElementById('chatInput');
+            const msg = text || input.value.trim();
+            if (!msg) return;
+            const container = document.getElementById('chatMessages');
+            container.innerHTML += '<div class="chat-msg user">' + msg + '</div>';
+            input.value = '';
+            setTimeout(function() {
+                const replies = {
+                    '运费查询': '空运：首重¥68-118\n海运：首重¥138-228\n快递：首重¥88-188\n专线：首重¥28-118',
+                    '仓库地址': '地址：山东省青岛市市北区\n收件人：您的用户识别码\n\n注册后查看专属地址',
+                    '禁运品': '❌ 禁止：危险品、武器、毒品、生鲜\n⚠️ 限制：化妆品≤100ml、香水≤100ml',
+                    '操作流程': '1. 注册获取仓库地址\n2. 购物填写仓库地址\n3. 包裹入库通知\n4. 支付运费发货'
+                };
+                const reply = replies[msg] || '感谢咨询！\nTelegram: @cn2global\n微信: cn2global';
+                container.innerHTML += '<div class="chat-msg bot" style="white-space:pre-line">' + reply + '</div>';
+                container.scrollTop = container.scrollHeight;
+            }, 500);
+        }
+        
+        // Initialize
+        showPage('home');
+    </script>
+</body>
+</html>

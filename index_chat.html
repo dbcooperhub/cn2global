@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CN2Global - 中国转运全球</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        *{font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+        .chat-btn{position:fixed;bottom:20px;right:20px;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,.2);font-size:24px;z-index:1000;transition:transform .2s}
+        .chat-btn:hover{transform:scale(1.1)}
+        .chat-window{position:fixed;bottom:90px;right:20px;width:380px;height:520px;background:white;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.2);display:none;z-index:1000;flex-direction:column}
+        .chat-window.active{display:flex}
+        .chat-header{background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:16px;border-radius:16px 16px 0 0;display:flex;justify-content:space-between;align-items:center}
+        .chat-messages{flex:1;overflow-y:auto;padding:16px;background:#f8fafc}
+        .chat-input-area{padding:16px;border-top:1px solid #e5e7eb}
+        .msg{margin-bottom:12px;max-width:85%}
+        .msg-user{margin-left:auto;background:#2563eb;color:white;padding:10px 14px;border-radius:16px 16px 4px 16px}
+        .msg-bot{background:white;padding:10px 14px;border-radius:16px 16px 16px 4px;box-shadow:0 1px 2px rgba(0,0,0,.1)}
+        .msg-translated{font-size:12px;color:#666;margin-top:4px;padding-top:4px;border-top:1px dashed #e5e7eb}
+        .translate-btn{font-size:11px;color:#667eea;cursor:pointer;margin-top:4px}
+        .warehouse-address{background:#f0fdf4;border:1px solid #22c55e;border-radius:8px;padding:12px;margin:8px 0}
+    </style>
+</head>
+<body class="bg-white">
+    <div id="app"></div>
+    
+    <!-- 聊天窗口 -->
+    <button class="chat-btn" id="chatBtn">💬</button>
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <div>
+                <div style="font-weight:600;font-size:16px">CN2Global 客服</div>
+                <div style="font-size:12px;opacity:.9">通常几分钟内回复 | 支持翻译</div>
+            </div>
+            <button onclick="document.getElementById('chatWindow').classList.remove('active')" style="background:none;border:none;color:white;font-size:20px;cursor:pointer">✕</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="msg msg-bot">
+                <div>您好！欢迎来到CN2Global转运服务。我可以帮您：</div>
+                <div style="margin-top:8px">
+                    <button onclick="sendQuickMsg('查询运费')" style="background:#e0e7ff;color:#3730a3;padding:6px 12px;border:none;border-radius:16px;margin:2px;cursor:pointer;font-size:13px">💰 查询运费</button>
+                    <button onclick="sendQuickMsg('仓库地址')" style="background:#e0e7ff;color:#3730a3;padding:6px 12px;border:none;border-radius:16px;margin:2px;cursor:pointer;font-size:13px">📦 仓库地址</button>
+                    <button onclick="sendQuickMsg('禁运品查询')" style="background:#e0e7ff;color:#3730a3;padding:6px 12px;border:none;border-radius:16px;margin:2px;cursor:pointer;font-size:13px">🚫 禁运品</button>
+                    <button onclick="sendQuickMsg('如何操作')" style="background:#e0e7ff;color:#3730a3;padding:6px 12px;border:none;border-radius:16px;margin:2px;cursor:pointer;font-size:13px">📖 如何操作</button>
+                </div>
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <div style="display:flex;gap:8px;margin-bottom:8px">
+                <select id="translateLang" style="padding:6px 10px;border:1px solid #d1d5db;border-radius:8px;font-size:12px;flex:1">
+                    <option value="none">关闭翻译</option>
+                    <option value="en">翻译为 English</option>
+                    <option value="ja">翻译为 日本語</option>
+                    <option value="ko">翻译为 한국어</option>
+                    <option value="vi">翻译为 Tiếng Việt</option>
+                </select>
+            </div>
+            <div style="display:flex;gap:8px">
+                <input type="text" id="chatInput" placeholder="输入消息..." style="flex:1;padding:10px 14px;border:1px solid #d1d5db;border-radius:20px;outline:none" onkeypress="if(event.key==='Enter')sendMessage()">
+                <button onclick="sendMessage()" style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;padding:10px 20px;border-radius:20px;cursor:pointer;font-weight:600">发送</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('chatBtn').onclick = function() {
+            document.getElementById('chatWindow').classList.toggle('active');
+        };
+        
+        const translations = {
+            'en': {
+                '您好！欢迎来到CN2Global转运服务。我可以帮您：': 'Hello! Welcome to CN2Global shipping service. I can help you:',
+                '查询运费': 'Check shipping rates',
+                '仓库地址': 'Warehouse address',
+                '禁运品查询': 'Prohibited items',
+                '如何操作': 'How to use',
+                '【仓库地址】': '[Warehouse Address]',
+                '请将此地址填写在您的收货地址中，收件人姓名请填写您的用户识别码（注册后在个人中心查看）。': 'Please use this address as your receiving address. Fill in your user ID (found in your account center after registration) as the recipient name.',
+                '【运费说明】': '[Shipping Rates]',
+                '首重1kg价格，续重每kg加收。具体价格请在首页运费查询查看。': 'First kg price shown, additional kg charged extra. Check the Pricing page for details.',
+                '【禁运品】': '[Prohibited Items]',
+                '危险品：易燃易爆、压缩气体、腐蚀性物品、毒性物品\n武器类：枪支弹药、管制刀具\n药品类：毒品、处方药、含麻黄碱药品\n食品类：生鲜肉类、植物种子\n其他：假冒伪劣商品、文物、大量现金': 'Dangerous goods: flammables, compressed gas, corrosives, toxics\nWeapons: guns, ammunition, controlled knives\nDrugs: narcotics, prescription drugs, ephedrine products\nFood: fresh meat, plant seeds\nOthers: counterfeits, cultural relics, large cash',
+                '【操作流程】': '[How to Use]',
+                '1. 注册账号获取专属仓库地址\n2. 在淘宝/京东等平台购物，填写仓库地址\n3. 包裹入库后系统通知您\n4. 申请发货，支付运费\n5. 坐等收货！': '1. Register to get your warehouse address\n2. Shop on Taobao/JD, fill in warehouse address\n3. System notifies you when package arrives\n4. Request shipping, pay the fee\n5. Wait for delivery!',
+            },
+            'ja': {
+                '您好！欢迎来到CN2Global转运服务。我可以帮您：': 'こんにちは！CN2Global転送サービスへようこそ。お手伝いできます：',
+                '【仓库地址】': '[倉庫住所]',
+                '请将此地址填写在您的收货地址中，收件人姓名请填写您的用户识别码。': 'この住所をお届け先住所としてご入力ください。受取人名にはユーザーIDをご入力ください。',
+            },
+            'ko': {
+                '您好！欢迎来到CN2Global转运服务。我可以帮您：': '안녕하세요! CN2Global 배송 서비스에 오신 것을 환영합니다. 도와드리겠습니다:',
+                '【仓库地址】': '[창고 주소]',
+            },
+            'vi': {
+                '您好！欢迎来到CN2Global转运服务。我可以帮您：': 'Xin chào! Chào mừng đến với dịch vụ vận chuyển CN2Global. Tôi có thể giúp bạn:',
+                '【仓库地址】': '[Địa chỉ kho]',
+            }
+        };
+        
+        function translateText(text, lang) {
+            if (lang === 'none' || !translations[lang]) return null;
+            return translations[lang][text] || null;
+        }
+        
+        function addMessage(text, isUser = false) {
+            const container = document.getElementById('chatMessages');
+            const lang = document.getElementById('translateLang').value;
+            
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'msg ' + (isUser ? 'msg-user' : 'msg-bot');
+            
+            let html = '<div>' + text.replace(/\n/g, '<br>') + '</div>';
+            
+            if (!isUser && lang !== 'none') {
+                const translated = translateText(text, lang);
+                if (translated) {
+                    html += '<div class="msg-translated">🌐 ' + translated.replace(/\n/g, '<br>') + '</div>';
+                }
+            }
+            
+            msgDiv.innerHTML = html;
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+            
+            addMessage(text, true);
+            input.value = '';
+            
+            setTimeout(() => {
+                const reply = getAutoReply(text);
+                addMessage(reply);
+            }, 500);
+        }
+        
+        function sendQuickMsg(text) {
+            addMessage(text, true);
+            setTimeout(() => {
+                const reply = getAutoReply(text);
+                addMessage(reply);
+            }, 500);
+        }
+        
+        function getAutoReply(text) {
+            if (text.includes('仓库') || text.includes('地址')) {
+                return '【仓库地址】\n\n📍 山东省青岛市市北区 [详细地址登录后查看]\n\n收件人：您的用户识别码\n联系电话：登录后查看\n\n请将此地址填写在您的收货地址中，收件人姓名请填写您的用户识别码（注册后在个人中心查看）。';
+            }
+            if (text.includes('运费') || text.includes('价格')) {
+                return '【运费说明】\n\n📦 空运：首重¥68-118，续重¥28-75/kg\n🚢 海运：首重¥138-228，续重¥4-22/kg\n⚡ 快递：首重¥88-188，续重¥42-108/kg\n🚂 专线：首重¥28-118，续重¥18-65/kg\n\n首重1kg价格，续重每kg加收。具体价格请在首页运费查询查看。';
+            }
+            if (text.includes('禁运') || text.includes('不能寄')) {
+                return '【禁运品】\n\n❌ 危险品：易燃易爆、压缩气体、腐蚀性物品、毒性物品\n❌ 武器类：枪支弹药、管制刀具\n❌ 药品类：毒品、处方药、含麻黄碱药品\n❌ 食品类：生鲜肉类、植物种子\n❌ 其他：假冒伪劣商品、文物、大量现金\n\n⚠️ 限制物品（可寄但有限制）：\n化妆品≤100ml/件、香水≤100ml、锂电池需安装设备中';
+            }
+            if (text.includes('操作') || text.includes('流程') || text.includes('怎么')) {
+                return '【操作流程】\n\n1️⃣ 注册账号获取专属仓库地址\n2️⃣ 在淘宝/京东等平台购物，填写仓库地址\n3️⃣ 包裹入库后系统通知您\n4️⃣ 申请发货，支付运费\n5️⃣ 坐等收货！\n\n💡 新用户优惠：首单满200减20，优惠码 NEW2026';
+            }
+            if (text.includes('时效') || text.includes('多久')) {
+                return '【运输时效】\n\n✈️ 空运：3-14天（亚洲3-5天，欧美7-14天）\n🚢 海运：8-50天（亚洲8-15天，欧美25-45天）\n⚡ 快递：1-8天（全球1-8天）\n🚂 专线：3-25天（亚洲3-8天，欧美10-25天）\n\n具体时效因目的地而异，请在运费查询页面查看。';
+            }
+            return '感谢您的咨询！如需更多帮助，请选择上方快捷按钮，或直接输入问题。\n\n您也可以联系我们：\n📱 Telegram: @cn2global\n💬 微信: cn2global\n📧 邮箱: service@cn2g.com';
+        }
+    </script>
+    
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <script type="text/babel">
+        const{useState}=React;
+        
+        const rates={
+            'US':{n:'美国',air:{b:118,p:75},sea:{b:198,p:18},express:{b:158,p:95},line:{b:98,p:55},d:{air:'7-12',sea:'25-35',express:'5-7',line:'10-15'}},
+            'UK':{n:'英国',air:{b:108,p:68},sea:{b:188,p:15},express:{b:148,p:88},line:{b:88,p:48},d:{air:'8-14',sea:'30-40',express:'5-8',line:'12-18'}},
+            'DE':{n:'德国',air:{b:108,p:68},sea:{b:188,p:15},express:{b:148,p:88},line:{b:88,p:48},d:{air:'8-14',sea:'30-40',express:'5-8',line:'12-18'}},
+            'JP':{n:'日本',air:{b:78,p:45},sea:{b:168,p:8},express:{b:128,p:65},line:{b:58,p:35},d:{air:'3-5',sea:'10-15',express:'2-3',line:'5-8'}},
+            'KR':{n:'韩国',air:{b:78,p:45},sea:{b:168,p:8},express:{b:128,p:65},line:{b:58,p:35},d:{air:'3-5',sea:'8-12',express:'2-3',line:'5-8'}},
+            'AU':{n:'澳大利亚',air:{b:108,p:65},sea:{b:198,p:12},express:{b:158,p:85},line:{b:88,p:45},d:{air:'7-12',sea:'20-30',express:'5-7',line:'10-15'}},
+            'CA':{n:'加拿大',air:{b:118,p:72},sea:{b:198,p:16},express:{b:158,p:92},line:{b:98,p:52},d:{air:'8-14',sea:'30-45',express:'5-8',line:'12-18'}},
+            'SG':{n:'新加坡',air:{b:68,p:38},sea:{b:158,p:6},express:{b:108,p:55},line:{b:48,p:28},d:{air:'3-5',sea:'8-12',express:'2-3',line:'5-7'}},
+            'MY':{n:'马来西亚',air:{b:68,p:40},sea:{b:158,p:7},express:{b:108,p:58},line:{b:48,p:30},d:{air:'4-6',sea:'10-15',express:'3-4',line:'6-8'}},
+            'TH':{n:'泰国',air:{b:68,p:42},sea:{b:158,p:8},express:{b:108,p:60},line:{b:48,p:32},d:{air:'4-6',sea:'12-18',express:'3-4',line:'6-10'}},
+            'VN':{n:'越南',air:{b:58,p:35},sea:{b:148,p:5},express:{b:98,p:50},line:{b:38,p:25},d:{air:'3-5',sea:'8-12',express:'2-3',line:'4-6'}},
+            'NZ':{n:'新西兰',air:{b:118,p:72},sea:{b:208,p:14},express:{b:168,p:92},line:{b:98,p:52},d:{air:'8-12',sea:'25-35',express:'5-8',line:'12-18'}},
+            'IT':{n:'意大利',air:{b:108,p:68},sea:{b:188,p:15},express:{b:148,p:88},line:{b:88,p:48},d:{air:'8-14',sea:'30-40',express:'5-8',line:'12-18'}},
+            'ES':{n:'西班牙',air:{b:108,p:68},sea:{b:188,p:15},express:{b:148,p:88},line:{b:88,p:48},d:{air:'8-14',sea:'30-40',express:'5-8',line:'12-18'}},
+            'NL':{n:'荷兰',air:{b:108,p:68},sea:{b:188,p:15},express:{b:148,p:88},line:{b:88,p:48},d:{air:'8-14',sea:'30-40',express:'5-8',line:'12-18'}},
+            'RU':{n:'俄罗斯',air:{b:98,p:58},sea:{b:178,p:12},express:{b:138,p:78},line:{b:78,p:42},d:{air:'10-18',sea:'30-45',express:'7-12',line:'15-25'}},
+            'AE':{n:'阿联酋',air:{b:88,p:52},sea:{b:178,p:10},express:{b:128,p:72},line:{b:68,p:38},d:{air:'6-10',sea:'18-25',express:'4-6',line:'8-12'}},
+            'TW':{n:'台湾',air:{b:58,p:32},sea:{b:148,p:5},express:{b:98,p:48},line:{b:38,p:22},d:{air:'2-3',sea:'5-8',express:'1-2',line:'3-5'}},
+            'HK':{n:'香港',air:{b:48,p:28},sea:{b:138,p:4},express:{b:88,p:42},line:{b:28,p:18},d:{air:'1-2',sea:'3-5',express:'1',line:'2-3'}},
+        };
+        const destinations=Object.keys(rates);
+        
+        const prohibitedItems=[
+            {cat:'危险品',items:['易燃易爆物品（烟花爆竹、汽油、酒精）','压缩气体（液化气、喷雾罐大容量）','腐蚀性物品（硫酸、蓄电池）','毒性物品（农药、杀虫剂）']},
+            {cat:'武器类',items:['枪支弹药、仿真枪、弓弩','管制刀具']},
+            {cat:'药品类',items:['毒品及替代品','处方药','含麻黄碱药品']},
+            {cat:'食品类',items:['生鲜肉类、蛋类','植物种子、苗木']},
+            {cat:'其他',items:['假冒伪劣商品','文物保护物品','大量现金']},
+        ];
+        
+        const announcements=[
+            {type:'important',title:'【重要】2026年春节假期通知',date:'2026-01-20',content:'春节期间（1月28日-2月4日）仓库暂停收发货，2月5日恢复正常。'},
+            {type:'promo',title:'【活动】新用户首单立减20元',date:'2026-03-01',content:'优惠码：NEW2026，满200元可用。'},
+            {type:'notice',title:'【通知】美国线路时效调整',date:'2026-03-15',content:'美国空运时效延长至7-12天。'},
+        ];
+        
+        function App(){
+            const[page,setPage]=useState('home');
+            const[price,setPrice]=useState(null);
+            const[detail,setDetail]=useState(null);
+            const[calc,setCalc]=useState({dest:'US',weight:1,service:'air'});
+            const[showBanner,setShowBanner]=useState(true);
+            
+            const calcPrice=()=>{
+                const r=rates[calc.dest][calc.service];
+                setPrice(r.b+Math.max(0,calc.weight-1)*r.p);
+                setDetail({...rates[calc.dest],service:calc.service});
+            };
+            
+            return(
+                <div style={{minHeight:'100vh',background:'white'}}>
+                    {/* 导航 */}
+                    <nav style={{position:'fixed',top:0,left:0,right:0,background:'white',boxShadow:'0 1px 3px rgba(0,0,0,.1)',zIndex:50}}>
+                        <div style={{maxWidth:1200,margin:'0 auto',padding:'0 16px',height:64,display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                            <div style={{fontSize:24,fontWeight:'bold',color:'#2563eb',cursor:'pointer'}} onClick={()=>setPage('home')}>CN2Global</div>
+                            <div style={{display:'flex',gap:16,flexWrap:'wrap'}}>
+                                {['home','services','price','notice','prohibited','tracking'].map(p=>(
+                                    <button key={p} onClick={()=>setPage(p)} style={{background:'none',border:'none',cursor:'pointer',color:'#374151',padding:'8px'}}>{{home:'首页',services:'服务',price:'运费',notice:'公告',prohibited:'禁运',tracking:'查询'}[p]}</button>
+                                ))}
+                            </div>
+                            <div>
+                                <button style={{color:'#2563eb',background:'none',border:'none',cursor:'pointer',marginRight:8}}>登录</button>
+                                <button style={{background:'#2563eb',color:'white',padding:'8px 16px',border:'none',borderRadius:8,cursor:'pointer'}}>注册</button>
+                            </div>
+                        </div>
+                    </nav>
+                    
+                    {/* 首页 */}
+                    {page==='home'&&(
+                        <div style={{paddingTop:64}}>
+                            {showBanner&&<div style={{background:'linear-gradient(to right,#f97316,#ef4444)',color:'white',padding:12,textAlign:'center'}}><span>📢 新用户首单立减20元！优惠码：NEW2026</span><button onClick={()=>setShowBanner(false)} style={{background:'none',border:'none',color:'white',marginLeft:16,cursor:'pointer'}}>✕</button></div>}
+                            
+                            <section style={{background:'linear-gradient(135deg,#2563eb,#1d4ed8)',color:'white',padding:'80px 16px',textAlign:'center'}}>
+                                <h1 style={{fontSize:48,marginBottom:16,fontWeight:'bold'}}>中国转运全球</h1>
+                                <p style={{fontSize:20,marginBottom:8,opacity:.9}}>专业国际集运转运服务平台</p>
+                                <p style={{fontSize:14,marginBottom:32,opacity:.8}}>📦 发货地：山东省青岛市市北区 | 覆盖全球20+国家</p>
+                                <div style={{display:'flex',gap:16,justifyContent:'center',flexWrap:'wrap'}}>
+                                    <button onClick={()=>setPage('price')} style={{background:'white',color:'#2563eb',padding:'14px 28px',border:'none',borderRadius:12,fontWeight:600,cursor:'pointer',fontSize:16}}>💰 快速询价</button>
+                                    <button onClick={()=>setPage('services')} style={{border:'2px solid white',color:'white',padding:'14px 28px',borderRadius:12,fontWeight:600,cursor:'pointer',fontSize:16,background:'transparent'}}>📦 了解服务</button>
+                                </div>
+                            </section>
+                            
+                            {/* 仓库地址卡片 */}
+                            <section style={{padding:'32px 16px',background:'#f0fdf4'}}>
+                                <div style={{maxWidth:600,margin:'0 auto',background:'white',borderRadius:16,boxShadow:'0 4px 6px rgba(0,0,0,.1)',padding:24,borderLeft:'4px solid #22c55e'}}>
+                                    <h3 style={{margin:'0 0 12px',fontSize:18,fontWeight:'bold',color:'#166534'}}>📍 中国仓库地址</h3>
+                                    <div style={{color:'#374151',lineHeight:1.8}}>
+                                        <p style={{margin:'4px 0'}}><strong>地址：</strong>山东省青岛市市北区 [详细地址登录后查看]</p>
+                                        <p style={{margin:'4px 0'}}><strong>收件人：</strong>您的用户识别码</p>
+                                        <p style={{margin:'4px 0'}}><strong>联系电话：</strong>登录后查看</p>
+                                    </div>
+                                    <p style={{margin:'12px 0 0',fontSize:13,color:'#666'}}>💡 注册登录后，个人中心显示您的专属仓库地址和识别码</p>
+                                </div>
+                            </section>
+                            
+                            {/* 计算器 */}
+                            <section style={{padding:'48px 16px',background:'#f9fafb'}}>
+                                <div style={{maxWidth:600,margin:'0 auto',background:'white',borderRadius:16,boxShadow:'0 4px 6px rgba(0,0,0,.1)',padding:24}}>
+                                    <h2 style={{fontSize:20,fontWeight:'bold',textAlign:'center',marginBottom:24}}>💰 快速询价</h2>
+                                    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(120px,1fr))',gap:12,marginBottom:16}}>
+                                        <select value={calc.dest} onChange={e=>setCalc({...calc,dest:e.target.value})} style={{padding:12,border:'1px solid #d1d5db',borderRadius:8}}>{destinations.map(d=><option key={d} value={d}>{rates[d].n}</option>)}</select>
+                                        <input type="number" value={calc.weight} onChange={e=>setCalc({...calc,weight:Number(e.target.value)})} style={{padding:12,border:'1px solid #d1d5db',borderRadius:8}} placeholder="重量

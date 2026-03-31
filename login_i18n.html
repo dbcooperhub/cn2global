@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="login.title">Login - CN2Global</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0066FF;
+            --secondary: #00D4FF;
+            --accent: #FF6B35;
+            --text: #1a1a1a;
+            --text-light: #666;
+            --bg: #fff;
+            --bg-light: #f8f9fa;
+            --border: #e5e7eb;
+            --success: #22c55e;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            color: var(--text);
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .lang-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .lang-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .lang-btn.active {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,102,255,0.1);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .login-header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .login-header p {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .country-code {
+            position: absolute;
+            left: 16px;
+            font-weight: 600;
+            color: var(--text-light);
+            pointer-events: none;
+            min-width: 50px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0,102,255,0.1);
+        }
+
+        .form-input.with-code {
+            padding-left: 70px;
+        }
+
+        .form-error {
+            color: var(--error);
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .form-error.show {
+            display: block;
+        }
+
+        .form-input.error {
+            border-color: var(--error);
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .forgot-password {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 16px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,102,255,0.3);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 24px 0;
+            color: var(--text-light);
+            font-size: 13px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .google-btn {
+            width: 100%;
+            padding: 14px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+
+        .google-btn:hover {
+            background: var(--bg-light);
+            border-color: var(--primary);
+        }
+
+        .google-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .register-link a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            display: none;
+            padding: 12px;
+            background: rgba(239,68,68,0.1);
+            border: 1px solid var(--error);
+            border-radius: 8px;
+            color: var(--error);
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 24px;
+            }
+
+            .login-header h1 {
+                font-size: 20px;
+            }
+
+            .lang-selector {
+                margin-bottom: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-wrapper">
+        <!-- 语言选择器 -->
+        <div class="lang-selector">
+            <button class="lang-btn active" data-lang="en">English</button>
+            <button class="lang-btn" data-lang="zh">中文</button>
+            <button class="lang-btn" data-lang="ja">日本語</button>
+            <button class="lang-btn" data-lang="de">Deutsch</button>
+            <button class="lang-btn" data-lang="fr">Français</button>
+        </div>
+
+        <div class="login-container">
+            <div class="login-header">
+                <div class="logo">CN2Global</div>
+                <h1 data-i18n="login.title">Login</h1>
+                <p data-i18n="login.subtitle">Welcome back to CN2Global</p>
+            </div>
+
+            <div class="error-message" id="errorMsg"></div>
+
+            <form id="loginForm">
+                <!-- 手机号码 -->
+                <div class="form-group">
+                    <label data-i18n="login.phone">Phone Number</label>
+                    <div class="input-wrapper">
+                        <span class="country-code" id="countryCodeDisplay">+86</span>
+                        <input 
+                            type="tel" 
+                            class="form-input with-code" 
+                            id="phone" 
+                            name="phone"
+                            data-i18n-placeholder="login.phone"
+                            placeholder="Enter your phone number"
+                            required
+                        >
+                    </div>
+                    <div class="form-error" id="phoneError" data-i18n="login.error_phone">Please enter a valid phone number</div>
+                </div>
+
+                <!-- 密码 -->
+                <div class="form-group">
+                    <label data-i18n="login.password">Password</label>
+                    <input 
+                        type="password" 
+                        class="form-input" 
+                        id="password" 
+                        name="password"
+                        data-i18n-placeholder="login.password"
+                        placeholder="Enter your password"
+                        required
+                    >
+                    <div class="form-error" id="passwordError" data-i18n="login.error_password">Password cannot be empty</div>
+                </div>
+
+                <!-- 忘记密码 -->
+                <div class="form-footer">
+                    <div></div>
+                    <a href="forgot-password.html" class="forgot-password" data-i18n="login.forgot_password">Forgot password?</a>
+                </div>
+
+                <!-- 登录按钮 -->
+                <button type="submit" class="login-btn" id="loginBtn" data-i18n="login.login_btn">Login</button>
+
+                <!-- 分割线 -->
+                <div class="divider">or</div>
+
+                <!-- Google 登录 -->
+                <button type="button" class="google-btn" id="googleBtn">
+                    <svg class="google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                    </svg>
+                    <span data-i18n="login.google_login">Sign in with Google</span>
+                </button>
+            </form>
+
+            <!-- 注册链接 -->
+            <div class="register-link">
+                <span data-i18n="login.register_link">No account? <a href="register_i18n.html">Register</a></span>
+            </div>
+        </div>
+    </div>
+
+    <script src="i18n.js"></script>
+    <script>
+        // 初始化
+        let currentLang = getUserLanguage();
+
+        // 语言按钮
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const lang = btn.getAttribute('data-lang');
+                setLanguage(lang);
+                updateLanguageButtons(lang);
+            });
+        });
+
+        function updateLanguageButtons(lang) {
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+            });
+        }
+
+        // 表单验证
+        function validatePhone(phone) {
+            return phone.length >= 7 && phone.length <= 15 && /^\d+$/.test(phone);
+        }
+
+        // 表单提交
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const phone = document.getElementById('phone').value.trim();
+            const password = document.getElementById('password').value;
+
+            let hasError = false;
+
+            // 验证手机
+            if (!validatePhone(phone)) {
+                document.getElementById('phoneError').classList.add('show');
+                document.getElementById('phone').classList.add('error');
+                hasError = true;
+            } else {
+                document.getElementById('phoneError').classList.remove('show');
+                document.getElementById('phone').classList.remove('error');
+            }
+
+            // 验证密码
+            if (!password) {
+                document.getElementById('passwordError').classList.add('show');
+                document.getElementById('password').classList.add('error');
+                hasError = true;
+            } else {
+                document.getElementById('passwordError').classList.remove('show');
+                document.getElementById('password').classList.remove('error');
+            }
+
+            if (hasError) return;
+
+            // 提交登录
+            const loginBtn = document.getElementById('loginBtn');
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Logging in...';
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        phone: '+86' + phone,  // 默认中国区号，实际应该根据选择的国家
+                        password: password,
+                        language: currentLang
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // 保存 token
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    // 重定向到仪表板
+                    window.location.href = '/dashboard.html';
+                } else {
+                    document.getElementById('errorMsg').textContent = data.message || t('login.error_invalid', currentLang);
+                    document.getElementById('errorMsg').classList.add('show');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                document.getElementById('errorMsg').textContent = 'Login failed. Please try again.';
+                document.getElementById('errorMsg').classList.add('show');
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = t('login.login_btn', currentLang);
+            }
+        });
+
+        // Google 登录
+        document.getElementById('googleBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = '/api/auth/google';
+        });
+
+        // 初始化
+        setLanguage(currentLang);
+        updateLanguageButtons(currentLang);
+    </script>
+</body>
+</html>

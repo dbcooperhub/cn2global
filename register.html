@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册 - CN2Global</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0066FF;
+            --secondary: #00D4FF;
+            --accent: #FF6B35;
+            --text: #1a1a1a;
+            --text-light: #666;
+            --bg: #fff;
+            --bg-light: #f8f9fa;
+            --border: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            color: var(--text);
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .register-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 20px 60px rgba(0,102,255,0.1);
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .register-header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .register-header p {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0,102,255,0.1);
+        }
+
+        .country-select-wrapper {
+            position: relative;
+        }
+
+        .country-select-btn {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 16px;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: inherit;
+        }
+
+        .country-select-btn:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .country-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .country-dropdown.show {
+            display: block;
+        }
+
+        .country-option {
+            padding: 12px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.2s;
+        }
+
+        .country-option:hover {
+            background: var(--bg-light);
+        }
+
+        .country-option.selected {
+            background: #e0f2fe;
+            color: var(--primary);
+        }
+
+        .code-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .code-row .form-input {
+            flex: 1;
+        }
+
+        .send-code-btn {
+            padding: 14px 20px;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .send-code-btn:hover:not(:disabled) {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .send-code-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #0052cc;
+            transform: translateY(-1px);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .divider span {
+            padding: 0 15px;
+        }
+
+        .google-btn {
+            width: 100%;
+            padding: 14px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .google-btn:hover {
+            background: var(--bg-light);
+            border-color: var(--text-light);
+        }
+
+        .footer-link {
+            text-align: center;
+            margin-top: 25px;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .footer-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-link a:hover {
+            text-decoration: underline;
+        }
+
+        .lang-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .lang-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        @media (max-width: 480px) {
+            .register-container {
+                padding: 30px 20px;
+            }
+
+            body {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="lang-btn" onclick="setLang(currentLang === 'zh' ? 'en' : 'zh')">
+        <span data-zh="EN">中文</span>
+        <span data-en="中文">EN</span>
+    </button>
+
+    <div class="register-container">
+        <div class="register-header">
+            <a href="index.html" class="logo">CN2Global</a>
+            <h1 data-zh="创建账号" data-en="Create Account">创建账号</h1>
+            <p data-zh="开始您的全球购物之旅" data-en="Start your global shopping journey">开始您的全球购物之旅</p>
+        </div>
+
+        <form id="registerForm" onsubmit="handleRegister(event)">
+            <div class="form-group">
+                <label data-zh="手机号码" data-en="Phone Number">手机号码</label>
+                <div class="country-select-wrapper">
+                    <button type="button" class="country-select-btn" onclick="showCountryModal()">
+                        <span id="selectedFlag">🇨🇳</span>
+                        <span id="selectedCode">+86</span>
+                        <span data-zh="选择区号" data-en="Select code">选择区号</span>
+                    </button>
+                    <div class="country-dropdown" id="countryDropdown">
+                        <!-- Countries will be populated by JS -->
+                    </div>
+                </div>
+                <input type="tel" class="form-input" id="phone" style="margin-top: 10px;" 
+                       placeholder="请输入手机号" data-placeholder-zh="请输入手机号" data-placeholder-en="Enter phone number">
+            </div>
+
+            <div class="form-group">
+                <label data-zh="验证码" data-en="Verification Code">验证码</label>
+                <div class="code-row">
+                    <input type="text" class="form-input" id="code" placeholder="请输入验证码" data-placeholder-zh="请输入验证码" data-placeholder-en="Enter code">
+                    <button type="button" class="send-code-btn" onclick="sendCode(this)" data-zh="发送验证码" data-en="Send Code">发送验证码</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label data-zh="密码" data-en="Password">密码</label>
+                <input type="password" class="form-input" id="password" placeholder="至少8位密码" data-placeholder-zh="至少8位密码" data-placeholder-en="At least 8 characters">
+            </div>
+
+            <div class="form-group">
+                <label data-zh="确认密码" data-en="Confirm Password">确认密码</label>
+                <input type="password" class="form-input" id="confirmPassword" placeholder="再次输入密码" data-placeholder-zh="再次输入密码" data-placeholder-en="Enter password again">
+            </div>
+
+            <button type="submit" class="btn-primary" data-zh="注册" data-en="Register">注册</button>
+        </form>
+
+        <div class="divider">
+            <span data-zh="或" data-en="OR">或</span>
+        </div>
+
+        <button class="google-btn" onclick="googleLogin()">
+            <svg width="20" height="20" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            <span data-zh="使用 Google 账号注册" data-en="Sign up with Google">使用 Google 账号注册</span>
+        </button>
+
+        <div class="footer-link">
+            <span data-zh="已有账号？" data-en="Already have an account?">已有账号？</span>
+            <a href="login.html" data-zh="立即登录" data-en="Login now">立即登录</a>
+        </div>
+    </div>
+
+    <script>
+        let currentLang = 'zh';
+        let selectedCountry = { code: '+86', flag: '🇨🇳', name: 'China' };
+        
+        const countries = [
+            { code: '+86', flag: '🇨🇳', name: 'China' },
+            { code: '+1', flag: '🇺🇸', name: 'United States' },
+            { code: '+44', flag: '🇬🇧', name: 'United Kingdom' },
+            { code: '+81', flag: '🇯🇵', name: 'Japan' },
+            { code: '+82', flag: '🇰🇷', name: 'South Korea' },
+            { code: '+49', flag: '🇩🇪', name: 'Germany' },
+            { code: '+33', flag: '🇫🇷', name: 'France' },
+            { code: '+61', flag: '🇦🇺', name: 'Australia' },
+            { code: '+1', flag: '🇨🇦', name: 'Canada' },
+            { code: '+65', flag: '🇸🇬', name: 'Singapore' },
+            { code: '+60', flag: '🇲🇾', name: 'Malaysia' },
+            { code: '+66', flag: '🇹🇭', name: 'Thailand' },
+            { code: '+84', flag: '🇻🇳', name: 'Vietnam' },
+            { code: '+62', flag: '🇮🇩', name: 'Indonesia' },
+            { code: '+63', flag: '🇵🇭', name: 'Philippines' },
+            { code: '+91', flag: '🇮🇳', name: 'India' },
+            { code: '+55', flag: '🇧🇷', name: 'Brazil' },
+            { code: '+52', flag: '🇲🇽', name: 'Mexico' },
+            { code: '+7', flag: '🇷🇺', name: 'Russia' },
+            { code: '+7', flag: '🇰🇿', name: 'Kazakhstan' },
+            { code: '+90', flag: '🇹🇷', name: 'Turkey' },
+            { code: '+966', flag: '🇸🇦', name: 'Saudi Arabia' },
+            { code: '+971', flag: '🇦🇪', name: 'UAE' },
+            { code: '+972', flag: '🇮🇱', name: 'Israel' },
+            { code: '+31', flag: '🇳🇱', name: 'Netherlands' },
+            { code: '+32', flag: '🇧🇪', name: 'Belgium' },
+            { code: '+41', flag: '🇨🇭', name: 'Switzerland' },
+            { code: '+43', flag: '🇦🇹', name: 'Austria' },
+            { code: '+48', flag: '🇵🇱', name: 'Poland' },
+            { code: '+39', flag: '🇮🇹', name: 'Italy' },
+            { code: '+34', flag: '🇪🇸', name: 'Spain' },
+            { code: '+351', flag: '🇵🇹', name: 'Portugal' },
+            { code: '+30', flag: '🇬🇷', name: 'Greece' },
+            { code: '+46', flag: '🇸🇪', name: 'Sweden' },
+            { code: '+47', flag: '🇳🇴', name: 'Norway' },
+            { code: '+45', flag: '🇩🇰', name: 'Denmark' },
+            { code: '+358', flag: '🇫🇮', name: 'Finland' },
+            { code: '+64', flag: '🇳🇿', name: 'New Zealand' },
+            { code: '+27', flag: '🇿🇦', name: 'South Africa' },
+            { code: '+234', flag: '🇳🇬', name: 'Nigeria' },
+            { code: '+20', flag: '🇪🇬', name: 'Egypt' },
+            { code: '+886', flag: '🇹🇼', name: 'Taiwan' },
+            { code: '+852', flag: '🇭🇰', name: 'Hong Kong' },
+            { code: '+54', flag: '🇦🇷', name: 'Argentina' },
+            { code: '+56', flag: '🇨🇱', name: 'Chile' },
+            { code: '+57', flag: '🇨🇴', name: 'Colombia' },
+            { code: '+51', flag: '🇵🇪', name: 'Peru' },
+            { code: '+380', flag: '🇺🇦', name: 'Ukraine' },
+            { code: '+420', flag: '🇨🇿', name: 'Czech Republic' },
+            { code: '+36', flag: '🇭🇺', name: 'Hungary' },
+            { code: '+40', flag: '🇷🇴', name: 'Romania' },
+            { code: '+359', flag: '🇧🇬', name: 'Bulgaria' }
+        ];
+
+        function setLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('[data-zh]').forEach(el => {
+                el.textContent = el.getAttribute(`data-${lang}`);
+            });
+            document.querySelectorAll('[data-placeholder-zh]').forEach(el => {
+                el.placeholder = el.getAttribute(`data-placeholder-${lang}`);
+            });
+            document.querySelectorAll('.lang-btn span').forEach(el => {
+                el.style.display = el.getAttribute(`data-${lang}`) ? 'inline' : 'none';
+            });
+        }
+
+        function showCountryModal() {
+            const dropdown = document.getElementById('countryDropdown');
+            dropdown.innerHTML = countries.map(c => `
+                <div class="country-option ${c.code === selectedCountry.code ? 'selected' : ''}" 
+                     onclick="selectCountry('${c.code}', '${c.flag}', '${c.name}')">
+                    <span>${c.flag}</span>
+                    <span>${c.name}</span>
+                    <span style="margin-left: auto; color: #999;">${c.code}</span>
+                </div>
+            `).join('');
+            dropdown.classList.toggle('show');
+        }
+
+        function selectCountry(code, flag, name) {
+            selectedCountry = { code, flag, name };
+            document.getElementById('selectedFlag').textContent = flag;
+            document.getElementById('selectedCode').textContent = code;
+            document.getElementById('countryDropdown').classList.remove('show');
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.country-select-wrapper')) {
+                document.getElementById('countryDropdown').classList.remove('show');
+            }
+        });
+
+        function sendCode(btn) {
+            const phone = document.getElementById('phone').value;
+            if (!phone) {
+                alert(currentLang === 'zh' ? '请输入手机号' : 'Please enter phone number');
+                return;
+            }
+            
+            let countdown = 60;
+            btn.disabled = true;
+            btn.textContent = countdown + 's';
+            
+            // Simulate code generation
+            const code = Math.floor(1000 + Math.random() * 9000);
+            console.log('Verification code:', code);
+            
+            const timer = setInterval(() => {
+                countdown--;
+                btn.textContent = countdown + 's';
+                if (countdown <= 0) {
+                    clearInterval(timer);
+                    btn.disabled = false;
+                    btn.textContent = currentLang === 'zh' ? '发送验证码' : 'Send Code';
+                }
+            }, 1000);
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            
+            const phone = document.getElementById('phone').value;
+            const code = document.getElementById('code').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (!phone) {
+                alert(currentLang === 'zh' ? '请输入手机号' : 'Please enter phone number');
+                return;
+            }
+            if (!code) {
+                alert(currentLang === 'zh' ? '请输入验证码' : 'Please enter verification code');
+                return;
+            }
+            if (password.length < 8) {
+                alert(currentLang === 'zh' ? '密码至少8位' : 'Password must be at least 8 characters');
+                return;
+            }
+            if (password !== confirmPassword) {
+                alert(currentLang === 'zh' ? '两次密码输入不一致' : 'Passwords do not match');
+                return;
+            }
+            
+            // Simulate successful registration
+            alert(currentLang === 'zh' ? '注册成功！' : 'Registration successful!');
+            window.location.href = 'login.html';
+        }
+
+        function googleLogin() {
+            alert(currentLang === 'zh' ? 'Google登录功能开发中...' : 'Google login coming soon...');
+        }
+
+        // Initialize
+        setLang('zh');
+    </script>
+</body>
+</html>

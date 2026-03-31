@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CN2Global - 中国转运全球 | 国际集运转运</title>
+    <meta name="description" content="中国青岛代收包裹，合箱打包，国际转运到全球。支持淘宝京东等电商包裹转运，7大语种服务。">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', 'Noto Sans SC', sans-serif; }
+        html { scroll-behavior: smooth; }
+        .chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
+        .chat-btn { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; font-size: 24px; transition: transform 0.3s; }
+        .chat-btn:hover { transform: scale(1.1); }
+        .chat-panel { position: absolute; bottom: 70px; right: 0; width: 320px; background: white; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: none; overflow: hidden; }
+        .chat-panel.active { display: block; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .chat-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 16px; }
+        .chat-body { padding: 16px; }
+        .chat-option { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px solid #e5e7eb; border-radius: 12px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; text-decoration: none; color: inherit; }
+        .chat-option:hover { border-color: #667eea; background: #f8fafc; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div id="app"></div>
+    
+    <!-- 客服组件 -->
+    <div class="chat-widget">
+        <button class="chat-btn" onclick="toggleChat()">💬</button>
+        <div class="chat-panel" id="chatPanel">
+            <div class="chat-header">
+                <h3 style="margin:0;font-size:18px;">联系我们</h3>
+                <p style="margin:4px 0 0;font-size:13px;opacity:0.9;">选择您喜欢的方式</p>
+            </div>
+            <div class="chat-body">
+                <a href="https://t.me/cn2global" target="_blank" class="chat-option">
+                    <div style="width:32px;height:32px;background:#0088cc;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;">✈️</div>
+                    <div>
+                        <div style="font-weight:600;">Telegram</div>
+                        <div style="font-size:12px;color:#666;">@cn2global 在线客服</div>
+                    </div>
+                </a>
+                <a href="javascript:void(0)" onclick="showWechat()" class="chat-option">
+                    <div style="width:32px;height:32px;background:#07c160;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;">💚</div>
+                    <div>
+                        <div style="font-weight:600;">微信客服</div>
+                        <div style="font-size:12px;color:#666;">扫码添加客服微信</div>
+                    </div>
+                </a>
+                <a href="mailto:service@cn2g.com" class="chat-option">
+                    <div style="width:32px;height:32px;background:#ea4335;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;">📧</div>
+                    <div>
+                        <div style="font-weight:600;">邮件咨询</div>
+                        <div style="font-size:12px;color:#666;">service@cn2g.com</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 微信二维码弹窗 -->
+    <div id="wechatModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:2000;align-items:center;justify-content:center;">
+        <div style="background:white;padding:24px;border-radius:16px;text-align:center;max-width:280px;">
+            <h3 style="margin:0 0 16px;font-size:18px;">微信扫码添加客服</h3>
+            <div style="width:180px;height:180px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;border-radius:8px;margin:0 auto;">
+                <span style="color:#666;font-size:14px;">客服微信二维码</span>
+            </div>
+            <p style="margin:12px 0 0;font-size:14px;color:#666;">微信号：cn2global</p>
+            <button onclick="closeWechat()" style="margin-top:16px;padding:10px 32px;background:#667eea;color:white;border:none;border-radius:8px;cursor:pointer;font-size:14px;">关闭</button>
+        </div>
+    </div>
+    
+    <script>
+        function toggleChat() { document.getElementById('chatPanel').classList.toggle('active'); }
+        function showWechat() { document.getElementById('wechatModal').style.display = 'flex'; }
+        function closeWechat() { document.getElementById('wechatModal').style.display = 'none'; }
+    </script>
+    
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <script type="text/babel">
+        const { useState } = React;
+        
+        const translations = {
+            'zh-CN': {
+                nav: { home: '首页', services: '服务', tracking: '物流查询', price: '运费查询', login: '登录', register: '注册' },
+                hero: { title: '中国转运全球', subtitle: '专业国际集运转运服务平台', from: '发货地：中国青岛', cta: '立即下单', calc: '计算运费' },
+                features: { title: '为什么选择我们', f1: { t: '7大语种', d: '支持中英日韩等' }, f2: { t: '智能合箱', d: '免费合箱加固' }, f3: { t: '全程追踪', d: '实时物流轨迹' }, f4: { t: '安全支付', d: '微信支付宝PayPal' } },
+                steps: { title: '操作流程', s1: '获取地址', s2: '购物填写', s3: '仓库入库', s4: '支付运费', s5: '坐等收货' },
+                footer: { c: '© 2026 CN2Global. All rights reserved.' },
+                service: { air: '空运', sea: '海运', express: '快递', line: '专线' },
+                days: '工作日', base: '首重', perkg: '续重'
+            },
+            'en': {
+                nav: { home: 'Home', services: 'Services', tracking: 'Tracking', price: 'Pricing', login: 'Login', register: 'Register' },
+                hero: { title: 'Ship from China to Global', subtitle: 'Professional International Forwarding Service', from: 'From: Qingdao, China', cta: 'Order Now', calc: 'Calculate' },
+                features: { title: 'Why Choose Us', f1: { t: '7 Languages', d: 'CN EN JP KR support' }, f2: { t: 'Smart Consolidate', d: 'Free consolidate pack' }, f3: { t: 'Full Tracking', d: 'Real-time tracking' }, f4: { t: 'Secure Payment', d: 'WeChat Alipay PayPal' } },
+                steps: { title: 'How It Works', s1: 'Get Address', s2: 'Shop Online', s3: 'Warehouse In', s4: 'Pay Shipping', s5: 'Receive' },
+                footer: { c: '© 2026 CN2Global. All rights reserved.' },
+                service: { air: 'Air', sea: 'Sea', express: 'Express', line: 'Line' },
+                days: 'days', base: 'First kg', perkg: 'Per kg'
+            }
+        };
+        
+        // 青岛发往全球运费数据（基础价+30元）
+        const shippingRates = {
+            'US': { n: '美国', air: { b: 118, p: 75 }, sea: { b: 198, p: 18 }, express: { b: 158, p: 95 }, line: { b: 98, p: 55 }, d: { air: '7-12', sea: '25-35', express: '5-7', line: '10-15' } },
+            'UK': { n: '英国', air: { b: 108, p: 68 }, sea: { b: 188, p: 15 }, express: { b: 148, p: 88 }, line: { b: 88, p: 48 }, d: { air: '8-14', sea: '30-40', express: '5-8', line: '12-18' } },
+            'DE': { n: '德国', air: { b: 108, p: 68 }, sea: { b: 188, p: 15 }, express: { b: 148, p: 88 }, line: { b: 88, p: 48 }, d: { air: '8-14', sea: '30-40', express: '5-8', line: '12-18' } },
+            'FR': { n: '法国', air: { b: 108, p: 68 }, sea: { b: 188, p: 15 }, express: { b: 148, p: 88 }, line: { b: 88, p: 48 }, d: { air: '8-14', sea: '30-40', express: '5-8', line: '12-18' } },
+            'JP': { n: '日本', air: { b: 78, p: 45 }, sea: { b: 168, p: 8 }, express: { b: 128, p: 65 }, line: { b: 58, p: 35 }, d: { air: '3-5', sea: '10-15', express: '2-3', line: '5-8' } },
+            'KR': { n: '韩国', air: { b: 78, p: 45 }, sea: { b: 168, p: 8 }, express: { b: 128, p: 65 }, line: { b: 58, p: 35 }, d: { air: '3-5', sea: '8-12', express: '2-3', line: '5-8' } },
+            'AU': { n: '澳大利亚', air: { b: 108, p: 65 }, sea: { b: 198, p: 12 }, express: { b: 158, p: 85 }, line: { b: 88, p: 45 }, d: { air: '7-12', sea: '20-30', express: '5-7', line: '10-15' } },
+            'CA': { n: '加拿大', air: { b: 118, p: 72 }, sea: { b: 198, p: 16 }, express: { b: 158, p: 92 }, line: { b: 98, p: 52 }, d: { air: '8-14', sea: '30-45', express: '5-8', line: '12-18' } },
+            'SG': { n: '新加坡', air: { b: 68, p: 38 }, sea: { b: 158, p: 6 }, express: { b: 108, p: 55 }, line: { b: 48, p: 28 }, d: { air: '3-5', sea: '8-12', express: '2-3', line: '5-7' } },
+            'MY': { n: '马来西亚', air: { b: 68, p: 40 }, sea: { b: 158, p: 7 }, express: { b: 108, p: 58 }, line: { b: 48, p: 30 }, d: { air: '4-6', sea: '10-15', express: '3-4', line: '6-8' } },
+            'TH': { n: '泰国', air: { b: 68, p: 42 }, sea: { b: 158, p: 8 }, express: { b: 108, p: 60 }, line: { b: 48, p: 32 }, d: { air: '4-6', sea: '12-18', express: '3-4', line: '6-10' } },
+            'VN': { n: '越南', air: { b: 58, p: 35 }, sea: { b: 148, p: 5 }, express: { b: 98, p: 50 }, line: { b: 38, p: 25 }, d: { air: '3-5', sea: '8-12', express: '2-3', line: '4-6' } },
+            'PH': { n: '菲律宾', air: { b: 68, p: 45 }, sea: { b: 158, p: 8 }, express: { b: 108, p: 62 }, line: { b: 48, p: 35 }, d: { air: '4-6', sea: '12-18', express: '3-4', line: '6-10' } },
+            'ID': { n: '印尼', air: { b: 78, p: 48 }, sea: { b: 168, p: 10 }, express: { b: 118, p: 68 }, line: { b: 58, p: 38 }, d: { air: '5-7', sea: '15-20', express: '3-5', line: '8-12' } },
+            'NZ': { n: '新西兰', air: { b: 118, p: 72 }, sea: { b: 208, p: 14 }, express: { b: 168, p: 92 }, line: { b: 98, p: 52 }, d: { air: '8-12', sea: '25-35', express: '5-8', line: '12-18' } },
+            'IT': { n: '意大利', air: { b: 108, p: 68 }, sea: { b: 188, p: 15 }, express: { b: 148, p: 88 }, line: { b: 88, p: 48 }, d: { air: '8-14', sea: '30-40', express: '5-8', line: '12-18' } },
+            'ES': { n: '西班牙', air: { b: 108, p: 68 }, sea: { b: 188, p: 15 }, express: { b: 148, p: 88 }, line: { b: 88, p: 48 }, d: { air: '8-14', sea: '30-40', express: '5-8', line: '12-18' } },
+            'NL': { n: '荷兰', air: { b: 108, p: 68 }, sea: { b: 188, p: 15 }, express: { b: 148, p: 88 }, line: { b: 88, p: 48 }, d: { air: '8-14', sea: '30-40', express: '5-8', line: '12-18' } },
+            'RU': { n: '俄罗斯', air: { b: 98, p: 58 }, sea: { b: 178, p: 12 }, express: { b: 138, p: 78 }, line: { b: 78, p: 42 }, d: { air: '10-18', sea: '30-45', express: '7-12', line: '15-25' } },
+            'BR': { n: '巴西', air: { b: 138, p: 85 }, sea: { b: 228, p: 22 }, express: { b: 188, p: 108 }, line: { b: 118, p: 65 }, d: { air: '12-20', sea: '35-50', express: '8-12', line: '18-28' } },
+            'MX': { n: '墨西哥', air: { b: 128, p: 78 }, sea: { b: 218, p: 18 }, express: { b: 178, p: 98 }, line: { b: 108, p: 58 }, d: { air: '10-16', sea: '30-45', express: '6-10', line: '15-22' } },
+            'AE': { n: '阿联酋', air: { b: 88, p: 52 }, sea: { b: 178, p: 10 }, express: { b: 128, p: 72 }, line: { b: 68, p: 38 }, d: { air: '6-10', sea: '18-25', express: '4-6', line: '8-12' } },
+            'SA': { n: '沙特', air: { b: 98, p: 58 }, sea: { b: 188, p: 12 }, express: { b: 138, p: 78 }, line: { b: 78, p: 42 }, d: { air: '8-12', sea: '22-30', express: '5-8', line: '10-15' } },
+            'IN': { n: '印度', air: { b: 88, p: 55 }, sea: { b: 178, p: 10 }, express: { b: 128, p: 75 }, line: { b: 68, p: 40 }, d: { air: '6-10', sea: '18-25', express: '4-6', line: '8-12' } },
+            'TW': { n: '台湾', air: { b: 58, p: 32 }, sea: { b: 148, p: 5 }, express: { b: 98, p: 48 }, line: { b: 38, p: 22 }, d: { air: '2-3', sea: '5-8', express: '1-2', line: '3-5' } },
+            'HK': { n: '香港', air: { b: 48, p: 28 }, sea: { b: 138, p: 4 }, express: { b: 88, p: 42 }, line: { b: 28, p: 18 }, d: { air: '1-2', sea: '3-5', express: '1', line: '2-3' } },
+        };
+        
+        const destinations = Object.keys(shippingRates);
+        
+        function App() {
+            const [lang, setLang] = useState('zh-CN');
+            const [page, setPage] = useState('home');
+            const [price, setPrice] = useState(null);
+            const [priceDetail, setPriceDetail] = useState(null);
+            const [calc, setCalc] = useState({ dest: 'US', weight: 1, service: 'air' });
+            
+            const t = translations[lang] || translations['zh-CN'];
+            
+            const calculate = () => {
+                const rate = shippingRates[calc.dest];
+                if (!rate) return;
+                const r = rate[calc.service];
+                const total = r.b + Math.max(0, calc.weight - 1) * r.p;
+                setPrice(total);
+                setPriceDetail({ base: r.b, perkg: r.p, days: rate.d[calc.service] });
+            };
+            
+            return (
+                <div className="min-h-screen bg-white">
+                    <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur shadow-sm z-50">
+                        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+                            <div className="text-2xl font-bold text-blue-600 cursor-pointer" onClick={()=>setPage('home')}>CN2Global</div>
+                            <div className="hidden md:flex items-center space-x-6">
+                                <button onClick={()=>setPage('home')} className="text-gray-700 hover:text-blue-600">{t.nav.home}</button>
+                                <button onClick={()=>setPage('services')} className="text-gray-700 hover:text-blue-600">{t.nav.services}</button>
+                                <button onClick={()=>setPage('tracking')} className="text-gray-700 hover:text-blue-600">{t.nav.tracking}</button>
+                                <button onClick={()=>setPage('price')} className="text-gray-700 hover:text-blue-600">{t.nav.price}</button>
+                            </div>
+                            <div className="flex items-center space-x-3">
+                                <select value={lang} onChange={(e)=>setLang(e.target.value)} className="border rounded px-2 py-1 text-sm">
+                                    <option value="zh-CN">🇨🇳 中文</option>
+                                    <option value="en">🇺🇸 English</option>
+                                </select>
+                                <button className="text-blue-600 text-sm">{t.nav.login}</button>
+                                <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700">{t.nav.register}</button>
+                            </div>
+                        </div>
+                    </nav>
+                    
+                    {page === 'home' && (
+                        <div className="pt-16">
+                            <section className="bg-gradient-to-br from-blue-600 to-blue-800 text-white py-20">
+                                <div className="max-w-4xl mx-auto text-center px-4">
+                                    <h1 className="text-4xl md:text-5xl font-bold mb-4">{t.hero.title}</h1>
+                                    <p className="text-xl mb-4 text-blue-100">{t.hero.subtitle}</p>
+                                    <p className="text-sm mb-8 text-blue-200">📦 {t.hero.from}</p>
+                                    <div className="flex gap-4 justify-center">
+                                        <button onClick={()=>setPage('price')} className="bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold hover:bg-blue-50">{t.hero.calc}</button>
+                                        <button onClick={()=>setPage('services')} className="border-2 border-white px-6 py-3 rounded-xl font-semibold hover:bg-white/10">{t.hero.cta}</button>
+                                    </div>
+                                </div>
+                            </section>
+                            
+                            <section className="py-12 bg-gray-50">
+                                <div className="max-w-2xl mx-auto px-4">
+                                    <div className="bg-white rounded-2xl shadow-lg p-6">
+                                        <h2 className="text-xl font-bold text-center mb-6">{t.hero.calc}</h2>
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                                            <select value={calc.dest} onChange={(e)=>setCalc({...calc, dest: e.target.value})} className="border rounded-lg p-3">
+                                                {destinations.map(d => <option key={d} value={d}>{shippingRates[d].n}</option>)}
+                                            </select>
+                                            <input type="number" value={calc.weight} onChange={(e)=>setCalc({...calc, weight: Number(e.target.value)})} placeholder="kg" className="border rounded-lg p-3" min="0.1" step="0.1"/>
+                                            <select value={calc.service} onChange={(e)=>setCalc({...calc, service: e.target.value})} className="border rounded-lg p-3">
+                                                <option value="air">{t.service.air}</option>
+                                                <option value="sea">{t.service.sea}</option>
+                                                <option value="express">{t.service.express}</option>
+                                                <option value="line">{t.service.line}</option>
+                                            </select>
+                                            <button onClick={calculate} className="bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700">计算</button>
+                                        </div>
+                                        {price && priceDetail && (
+                                            <div className="p-4 bg-green-50 rounded-xl">
+                                                <div className="text-center mb-3">
+                                                    <span className="text-gray-600">预估运费：</span>
+                                                    <span className="text-3xl font-bold text-green-600">¥{price}</span>
+                                                </div>
+                                                <div className="text-sm text-gray-500 text-center">
+                                                    {t.base}: ¥{priceDetail.base} | {t.perkg}: ¥{priceDetail.perkg}/kg | 时效: {priceDetail.days} {t.days}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </section>
+                            
+                            <section className="py-16">
+                                <div className="max-w-6xl mx-auto px-4">
+                                    <h2 className="text-2xl font-bold text-center mb-10">{t.features.title}</h2>
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                                        <div className="text-center p-6"><div className="text-4xl mb-3">🌐</div><h3 className="font-semibold mb-2">{t.features.f1.t}</h3><p className="text-gray-500 text-sm">{t.features.f1.d}</p></div>
+                                        <div className="text-center p-6"><div className="text-4xl mb-3">📦</div><h3 className="font-semibold mb-2">{t.features.f2.t}</h3><p className="text-gray-500 text-sm">{t.features.f2.d}</p></div>
+                                        <div className="text-center p-6"><div className="text-4xl mb-3">📍</div><h3 className="font-semibold mb-2">{t.features.f3.t}</h3><p className="text-gray-500 text-sm">{t.features.f3.d}</p></div>
+                                        <div className="text-center p-6"><div className="text-4xl mb-3">💳</div><h3 className="font-semibold mb-2">{t.features.f4.t}</h3><p className="text-gray-500 text-sm">{t.features.f4.d}</p></div>
+                                    </div>
+                                </div>
+                            </section>
+                            
+                            <section className="py-16 bg-gray-50">
+                                <div className="max-w-6xl mx-auto px-4">
+                                    <h2 className="text-2xl font-bold text-center mb-10">{t.steps.title}</h2>
+                                    <div className="flex flex-wrap justify-center gap-4">
+                                        {[1,2,3,4,5].map(i => <div key={i} className="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-xl">{i}</div>)}
+                                    </div>
+                                    <div className="flex flex-wrap justify-center gap-4 mt-4 text-sm text-gray-600">
+                                        <span className="w-16 text-center">{t.steps.s1}</span>
+                                        <span className="w-16 text-center">{t.steps.s2}</span>
+                                        <span className="w-16 text-center">{t.steps.s3}</span>
+                                        <span className="w-16 text-center">{t.steps.s4}</span>
+                                        <span className="w-16 text-center">{t.steps.s5}</span>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    )}
+                    
+                    {page === 'services' && (
+                        <div className="pt-20 px-4 py-12 max-w-6xl mx-auto">
+                            <h1 className="text-3xl font-bold mb-8">服务项目</h1>
+                            <div className="grid md:grid-cols-3 gap-6">
+                                <div className="border rounded-xl p-6"><h3 className="font-bold text-lg mb-2">📦 国内代收</h3><p className="text-gray-600">支持淘宝、京东、拼多多等电商平台包裹代收，青岛仓库入库</p></div>
+                                <div className="border rounded-xl p-6"><h3 className="font-bold text-lg mb-2">✂️ 合箱打包</h3><p className="text-gray-600">免费合箱、加固、去除包装，专业打包服务</p></div>
+                                <div className="border rounded-xl p-6"><h3 className="font-bold text-lg mb-2">✈️ 国际物流</h3><p className="text-gray-600">空运、海运、快递、专线四种方式，覆盖全球28+国家</p></div>
+                                <div className="border rounded-xl p-6"><h3 className="font-bold text-lg mb-2">📱 全程追踪</h3><p className="text-gray-600">物流轨迹实时更新，多语种展示</p></div>
+                                <div className="border rounded-xl p-6"><h3 className="font-bold text-lg mb-2">🛃 清关服务</h3><p className="text-gray-600">专业清关，报税配送一站式</p></div>
+                                <div className="border rounded-xl p-6"><h3 className="font-bold text-lg mb-2">💰 支付方式</h3><p className="text-gray-600">微信、支付宝、PayPal、信用卡</p></div>
+                            </div>
+                        </div>
+                    )}
+                    
+                    {page === 'tracking' && (
+                        <div className="pt-20 px-4 py-12 max-w-2xl mx-auto">
+                            <h1 className="text-3xl font-bold mb-8 text-center">物流查询</h1>
+                            <div className="flex gap-4 mb-8">
+                                <input type="text" placeholder="输入运单号" className="flex-1 border rounded-xl p-4"/>
+                                <button className="bg-blue-600 text-white px-6 rounded-xl font-semibold">查询</button>
+                            </div>
+                            <div className="border rounded-xl p-6 text-center text-gray-500">输入运单号查看物流轨迹</div>
+                        </div>
+                    )}
+                    
+                    {page === 'price' && (
+                        <div className="pt-20 px-4 py-12 max-w-6xl mx-auto">
+                            <h1 className="text-3xl font-bold mb-2 text-center">运费查询</h1>
+                            <p className="text-center text-gray-500 mb-8">发货地：中国青岛 | 运费包含30元操作费</p>
+                            
+                            <div className="overflow-x-auto">
+                                <table className="w-full border-collapse bg-white rounded-xl shadow-lg">
+                                    <thead>
+                                        <tr className="bg-blue-600 text-white">
+                                            <th className="p-3 text-left">目的地</th>
+                                            <th className="p-3 text-center">空运(首重/续重)</th>
+                                            <th className="p-3 text-center">海运(首重/续重)</th>
+                                            <th className="p-3 text-center">快递(首重/续重)</th>
+                                            <th className="p-3 text-center">专线(首重/续重)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {destinations.map((d, i) => (
+                                            <tr key={d} className={i % 2 === 0 ? 'bg-gray-50' : ''}>
+                                                <td className="p-3 font-medium">{shippingRates[d].n}</td>
+                                                <td className="p-3 text-center text-sm">¥{shippingRates[d].air.b}/{shippingRates[d].air.p}<br/><span className="text-gray-400">{shippingRates[d].d.air}天</span></td>
+                                                <td className="p-3 text-center text-sm">¥{shippingRates[d].sea.b}/{shippingRates[d].sea.p}<br/><span className="text-gray-400">{shippingRates[d].d.sea}天</span></td>
+                                                <td className="p-3 text-center text-sm">¥{shippingRates[d].express.b}/{shippingRates[d].express.p}<br/><span className="text-gray-400">{shippingRates[d].d.express}天</span></td>
+                                                <td className="p-3 text-center text-sm">¥{shippingRates[d].line.b}/{shippingRates[d].line.p}<br/><span className="text-gray-400">{shippingRates[d].d.line}天</span></td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p className="text-sm text-gray-500 mt-4 text-center">* 首重1kg价格 / 续重每kg价格（单位：人民币）</p>
+                        </div>
+                    )}
+                    
+                    <footer className="bg-gray-900 text-gray-400 py-12">
+                        <div className="max-w-6xl mx-auto px-4 text-center">
+                            <p className="text-2xl font-bold text-white mb-4">CN2Global</p>
+                            <p className="text-sm mb-4">中国青岛 | 专业国际集运转运</p>
+                            <p className="text-sm">{t.footer.c}</p>
+                        </div>
+                    </footer>
+                </div>
+            );
+        }
+        
+        ReactDOM.createRoot(document.getElementById('app')).render(<App/>);
+    </script>
+</body>
+</html>

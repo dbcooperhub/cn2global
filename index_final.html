@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CN2Global - 中国转运全球</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root{--primary:#1E88E5;--primary-light:#64B5F6;--white:#FFF;--bg:#F5F7FA;--text:#1a1a2e;--gray:#6b7280;--border:#e5e7eb;--success:#10b981;--warning:#f59e0b;--danger:#ef4444}
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body{font-family:'Noto Sans SC',sans-serif;background:var(--white);color:var(--text);line-height:1.6}
+        body.en{font-family:Montserrat,sans-serif}
+        .container{max-width:1200px;margin:0 auto;padding:0 20px}
+        .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 24px;font-size:14px;font-weight:600;border-radius:8px;border:none;cursor:pointer;transition:all .2s}
+        .btn-primary{background:var(--primary);color:var(--white)}
+        .btn-primary:hover{background:#1565C0}
+        .btn-outline{background:var(--white);color:var(--primary);border:1.5px solid var(--primary)}
+        .btn-outline:hover{background:var(--primary);color:var(--white)}
+        .btn-lg{padding:16px 32px;font-size:16px}
+        .form-input,.form-select{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:14px}
+        .form-input:focus,.form-select:focus{outline:none;border-color:var(--primary)}
+        .form-label{display:block;margin-bottom:6px;font-size:13px;font-weight:600}
+        .form-group{margin-bottom:16px}
+        
+        /* Nav */
+        .nav{position:fixed;top:0;left:0;right:0;height:64px;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);z-index:1000}
+        .nav-inner{max-width:1200px;margin:0 auto;padding:0 20px;height:100%;display:flex;align-items:center;justify-content:space-between}
+        .nav-logo{font-size:22px;font-weight:700;color:var(--primary);cursor:pointer}
+        .nav-links{display:flex;gap:32px}
+        .nav-link{font-size:14px;font-weight:500;color:var(--gray);cursor:pointer;transition:color .2s}
+        .nav-link:hover,.nav-link.active{color:var(--primary)}
+        .nav-actions{display:flex;align-items:center;gap:12px}
+        .lang-switch{display:flex;background:var(--bg);border-radius:20px;padding:4px}
+        .lang-btn{padding:6px 14px;font-size:13px;font-weight:500;border-radius:16px;color:var(--gray);cursor:pointer;transition:all .2s}
+        .lang-btn.active{background:var(--white);color:var(--primary);box-shadow:0 1px 2px rgba(0,0,0,.05)}
+        .nav-toggle{display:none;width:44px;height:44px;align-items:center;justify-content:center;font-size:24px}
+        
+        /* Hero */
+        .hero{min-height:100vh;display:flex;align-items:center;padding:100px 20px 60px;background:linear-gradient(135deg,#f0f7ff,#e8f4fd 50%,var(--white));position:relative}
+        .hero-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+        .hero-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(30,136,229,.1);color:var(--primary);font-size:13px;font-weight:600;border-radius:20px;margin-bottom:20px}
+        .hero-title{font-size:clamp(32px,5vw,52px);font-weight:700;line-height:1.2;margin-bottom:16px}
+        .hero-title span{color:var(--primary)}
+        .hero-subtitle{font-size:clamp(16px,2vw,18px);color:var(--gray);margin-bottom:32px;max-width:500px}
+        .hero-actions{display:flex;gap:16px;flex-wrap:wrap}
+        .hero-stats{display:flex;gap:40px;margin-top:48px}
+        .hero-stat-value{font-size:32px;font-weight:700;color:var(--primary)}
+        .hero-stat-label{font-size:13px;color:var(--gray)}
+        .hero-card{background:var(--white);border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,.1);padding:24px}
+        .hero-card-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+        .hero-card-icon{width:40px;height:40px;background:var(--primary);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--white);font-size:20px}
+        .quick-calc{display:grid;gap:12px}
+        .quick-calc-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        .quick-calc-result{background:var(--bg);border-radius:8px;padding:16px;text-align:center}
+        .quick-calc-price{font-size:28px;font-weight:700;color:var(--primary)}
+        .quick-calc-detail{font-size:12px;color:var(--gray);margin-top:4px}
+        
+        /* Sections */
+        .section{padding:80px 20px}
+        .section-gray{background:var(--bg)}
+        .section-header{text-align:center;margin-bottom:48px}
+        .section-tag{display:inline-block;padding:6px 14px;background:rgba(30,136,229,.1);color:var(--primary);font-size:12px;font-weight:600;border-radius:20px;margin-bottom:12px;text-transform:uppercase}
+        .section-title{font-size:clamp(28px,4vw,36px);font-weight:700;margin-bottom:12px}
+        .section-subtitle{font-size:16px;color:var(--gray);max-width:600px;margin:0 auto}
+        
+        /* Features */
+        .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px}
+        .feature-card{background:var(--white);border-radius:12px;padding:28px;box-shadow:0 4px 6px rgba(0,0,0,.07);transition:transform .3s,box-shadow .3s}
+        .feature-card:hover{transform:translateY(-4px);box-shadow:0 10px 25px rgba(0,0,0,.1)}
+        .feature-icon{width:48px;height:48px;background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px}
+        .feature-title{font-size:17px;font-weight:600;margin-bottom:8px}
+        .feature-desc{font-size:14px;color:var(--gray);line-height:1.6}
+        
+        /* Steps */
+        .steps-container{display:flex;justify-content:center;gap:20px;flex-wrap:wrap}
+        .step-card{flex:1;min-width:200px;max-width:240px;text-align:center;padding:24px 20px;background:var(--white);border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,.07);position:relative}
+        .step-card::after{content:'→';position:absolute;right:-20px;top:50%;transform:translateY(-50%);font-size:20px;color:var(--primary-light)}
+        .step-card:last-child::after{display:none}
+        .step-number{width:48px;height:48px;background:var(--primary);color:var(--white);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;margin:0 auto 16px}
+        .step-title{font-size:15px;font-weight:600;margin-bottom:8px}
+        .step-desc{font-size:13px;color:var(--gray)}
+        
+        /* Warehouse */
+        .warehouse-card{background:linear-gradient(135deg,var(--primary),#1565C0);border-radius:12px;padding:40px;color:var(--white);display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+        .warehouse-info h3{font-size:28px;font-weight:700;margin-bottom:12px}
+        .warehouse-info p{opacity:.9;margin-bottom:24px}
+        .warehouse-details{background:rgba(255,255,255,.15);border-radius:8px;padding:20px}
+        .warehouse-detail-item{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+        .warehouse-detail-item:last-child{border-bottom:none}
+        .warehouse-detail-label{opacity:.8}
+        .warehouse-detail-value{font-weight:600}
+        .copy-btn{padding:4px 10px;background:rgba(255,255,255,.2);border-radius:4px;font-size:11px;cursor:pointer}
+        
+        /* Pricing */
+        .pricing-table-wrapper{background:var(--white);border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,.07);overflow-x:auto}
+        .pricing-table{width:100%;border-collapse:collapse}
+        .pricing-table th,.pricing-table td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--border)}
+        .pricing-table th{background:var(--bg);font-size:12px;font-weight:600;color:var(--gray);text-transform:uppercase}
+        .pricing-table tbody tr:hover{background:var(--bg)}
+        .pricing-table td:first-child{font-weight:500}
+        .pricing-price{font-size:13px;font-weight:600;color:var(--primary)}
+        .pricing-time{font-size:11px;color:#9ca3af}
+        
+        /* Prohibited */
+        .prohibited-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+        .prohibited-card{background:var(--white);border-radius:8px;padding:20px;border-left:4px solid var(--danger)}
+        .prohibited-card.restricted{border-left-color:var(--warning)}
+        .prohibited-card h4{font-size:14px;font-weight:600;margin-bottom:12px}
+        .prohibited-card ul{list-style:none;font-size:13px;color:var(--gray)}
+        .prohibited-card li{padding:4px 0 4px 16px;position:relative}
+        .prohibited-card li::before{content:'•';position:absolute;left:0;color:var(--danger)}
+        .prohibited-card.restricted li::before{color:var(--warning)}
+        
+        /* Tracking */
+        .tracking-box{background:var(--white);border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,.07);padding:32px;max-width:600px;margin:0 auto}
+        .tracking-input-group{display:flex;gap:12px;margin-bottom:24px}
+        .tracking-input-group input{flex:1}
+        .tracking-result{display:none;border-top:1px solid var(--border);padding-top:24px}
+        .tracking-result.show{display:block}
+        .tracking-timeline{position:relative;padding-left:30px}
+        .tracking-timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--border)}
+        .tracking-item{position:relative;padding-bottom:20px}
+        .tracking-item:last-child{padding-bottom:0}
+        .tracking-item::before{content:'';position:absolute;left:-26px;top:4px;width:12px;height:12px;background:var(--border);border-radius:50%;border:2px solid var(--white)}
+        .tracking-item.completed::before{background:var(--success)}
+        .tracking-item.current::before{background:var(--primary);box-shadow:0 0 0 4px rgba(30,136,229,.2)}
+        .tracking-item-time{font-size:12px;color:#9ca3af;margin-bottom:2px}
+        .tracking-item-title{font-size:14px;font-weight:500}
+        .tracking-item-location{font-size:12px;color:var(--gray)}
+        
+        /* Help */
+        .help-grid{display:grid;grid-template-columns:250px 1fr;gap:32px}
+        .help-nav{background:var(--white);border-radius:12px;padding:16px;height:fit-content;box-shadow:0 4px 6px rgba(0,0,0,.07)}
+        .help-nav-item{display:block;padding:12px 16px;font-size:14px;color:var(--gray);border-radius:8px;cursor:pointer}
+        .help-nav-item:hover{background:var(--bg);color:var(--text)}
+        .help-nav-item.active{background:var(--primary);color:var(--white)}
+        .help-content{background:var(--white);border-radius:12px;padding:32px;box-shadow:0 4px 6px rgba(0,0,0,.07)}
+        .help-section{display:none}
+        .help-section.active{display:block}
+        .help-section-title{font-size:20px;font-weight:600;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+        .faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:12px}
+        .faq-question{padding:16px;font-size:14px;font-weight:500;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+        .faq-question:hover{background:var(--bg)}
+        .faq-answer{display:none;padding:0 16px 16px;font-size:14px;color:var(--gray);line-height:1.6}
+        .faq-item.open .faq-answer{display:block}
+        
+        /* Chat */
+        .chat-widget{position:fixed;bottom:24px;right:24px;z-index:999}
+        .chat-toggle{width:56px;height:56px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--white);box-shadow:0 10px 25px rgba(0,0,0,.1);cursor:pointer}
+        .chat-toggle:hover{transform:scale(1.1)}
+        .chat-panel{position:absolute;bottom:70px;right:0;width:360px;max-height:500px;background:var(--white);border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,.15);display:none;flex-direction:column;overflow:hidden}
+        .chat-panel.open{display:flex;animation:slideUp .3s ease}
+        @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .chat-header{background:var(--primary);color:var(--white);padding:16px}
+        .chat-header h4{font-size:16px;font-weight:600}
+        .chat-header p{font-size:12px;opacity:.8;margin-top:2px}
+        .chat-messages{flex:1;padding:16px;overflow-y:auto;max-height:300px}
+        .chat-message{margin-bottom:12px}
+        .chat-message.bot .msg-content{background:var(--bg);padding:10px 14px;border-radius:12px;font-size:14px;display:inline-block}
+        .chat-message.user{text-align:right}
+        .chat-message.user .msg-content{background:var(--primary);color:var(--white);padding:10px 14px;border-radius:12px;font-size:14px;display:inline-block}
+        .chat-quick-replies{padding:0 16px 12px;display:flex;flex-wrap:wrap;gap:6px}
+        .chat-quick-reply{padding:6px 12px;background:var(--bg);color:var(--primary);font-size:12px;border-radius:16px;cursor:pointer}
+        .chat-quick-reply:hover{background:var(--primary);color:var(--white)}
+        .chat-input-area{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px}
+        .chat-input-area input{flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:20px;font-size:14px}
+        .chat-input-area input:focus{outline:none;border-color:var(--primary)}
+        .chat-send{width:36px;height:36px;background:var(--primary);color:var(--white);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer}
+        
+        /* Footer */
+        .footer{background:var(--text);color:var(--white);padding:60px 20px 30px}
+        .footer-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+        .footer-brand{font-size:24px;font-weight:700;margin-bottom:12px}
+        .footer-desc{font-size:14px;opacity:.7;margin-bottom:20px}
+        .footer-title{font-size:14px;font-weight:600;margin-bottom:16px}
+        .footer-links{list-style:none}
+        .footer-links li{margin-bottom:10px}
+        .footer-links a{font-size:14px;opacity:.7;transition:opacity .2s;cursor:pointer}
+        .footer-links a:hover{opacity:1}
+        .footer-bottom{max-width:1200px;margin:0 auto;padding-top:30px;border-top:1px solid rgba(255,255,255,.1);text-align:center;font-size:13px;opacity:.6}
+        
+        /* Modal */
+        .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:2000;padding:20px}
+        .modal-overlay.open{display:flex}
+        .modal{background:var(--white);border-radius:12px;max-width:440px;width:100%;max-height:90vh;overflow-y:auto}
+        .modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+        .modal-title{font-size:18px;font-weight:600}
+        .modal-close{width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--gray);border-radius:8px;cursor:pointer}
+        .modal-close:hover{background:var(--bg)}
+        .modal-body{padding:24px}
+        .modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:12px;justify-content:flex-end}
+        
+        /* Toast */
+        .toast-container{position:fixed;top:80px;right:20px;z-index:3000;display:flex;flex-direction:column;gap:8px}
+        .toast{background:var(--white);border-radius:8px;box-shadow:0 10px 25px rgba(0,0,0,.1);padding:14px 20px;display:flex;align-items:center;gap:12px;min-width:280px;animation:slideIn .3s ease}
+        @keyframes slideIn{from{opacity:0;transform:translateX(100%)}to{opacity:1;transform:translateX(0)}}
+        .toast.success .toast-icon{color:var(--success)}
+        .toast.error .toast-icon{color:var(--danger)}
+        .toast-icon{font-size:20px}
+        .toast-message{font-size:14px}
+        
+        /* Responsive */
+        @media(max-width:1024px){
+            .hero-inner{grid-template-columns:1fr;gap:40px}
+            .hero-visual{order:-1}
+            .help-grid{grid-template-columns:1fr}
+            .help-nav{display:flex;flex-wrap:wrap;gap:8px}
+            .help-nav-item{padding:8px 14px}
+            .footer-grid{grid-template-columns:1fr 1fr}
+        }
+        @media(max-width:768px){
+            .nav-links{display:none}
+            .nav-toggle{display:flex}
+            .hero-stats{gap:24px}
+            .hero-stat-value{font-size:24px}
+            .warehouse-card{grid-template-columns:1fr}
+            .step-card::after{display:none}
+            .footer-grid{grid-template-columns:1fr;gap:24px}
+        }
+        @media(max-width:480px){
+            .quick-calc-row{grid-template-columns:1fr}
+            .hero-stats{flex-wrap:wrap}
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-inner">
+            <div class="nav-logo" onclick="showPage('home')">CN2Global</div>
+            <div class="nav-links">
+                <a class="nav-link active" data-i18n="nav.home" onclick="showPage('home')">首页</a>
+                <a class="nav-link" data-i18n="nav.services" onclick="showPage('services')">服务</a>
+                <a class="nav-link" data-i18n="nav.pricing" onclick="showPage('pricing')">运费</a>
+                <a class="nav-link" data-i18n="nav.tracking" onclick="showPage('tracking')">查询</a>
+                <a class="nav-link" data-i18n="nav.prohibited" onclick="showPage('prohibited')">禁运品</a>
+                <a class="nav-link" data-i18n="nav.help" onclick="showPage('help')">帮助</a>
+            </div>
+            <div class="nav-actions">
+                <div class="lang-switch">
+                    <button class="lang-btn active" onclick="setLang('zh')">中文</button>
+                    <button class="lang-btn" onclick="setLang('en')">EN</button>
+                </div>
+                <button class="btn btn-outline" data-i18n="nav.login" onclick="openModal('loginModal')">登录</button>
+                <button class="btn btn-primary" data-i18n="nav.register" onclick="openModal('registerModal')">注册</button>
+            </div>
+            <button class="nav-toggle" onclick="toggleMobileMenu()">☰</button>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main id="main"></main>
+    
+    <!-- Chat Widget -->
+    <div class="chat-widget">
+        <button class="chat-toggle" onclick="toggleChat()">💬</button>
+        <div class="chat-panel" id="chatPanel">
+            <div class="chat-header">
+                <h4 data-i18n="chat.title">在线客服</h4>
+                <p data-i18n="chat.subtitle">工作日 9:00-22:00 在线</p>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-message bot"><div class="msg-content" data-i18n="chat.welcome">您好！欢迎来到CN2Global。请问有什么可以帮您？</div></div>
+            </div>
+            <div class="chat-quick-replies">
+                <button class="chat-quick-reply" onclick="sendQuickChat('price')" data-i18n="chat.quick.price">运费查询</button>
+                <button class="chat-quick-reply" onclick="sendQuickChat('address')" data-i18n="chat.quick.address">仓库地址</button>
+                <button class="chat-quick-reply" onclick="sendQuickChat('prohibited')" data-i18n="chat.quick.prohibited">禁运品</button>
+                <button class="chat-quick-reply" onclick="sendQuickChat('guide')" data-i18n="chat.quick.guide">新手指南</button>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="输入消息..." onkeypress="if(event.key==='Enter')sendChat()">
+                <button class="chat-send" onclick="sendChat()">➤</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" data-i18n="modal.login">登录</div>
+                <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" data-i18n="form.phone">手机号/邮箱</label>
+                    <input type="text" class="form-input" id="loginEmail" placeholder="请输入手机号或邮箱">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" data-i18n="form.password">密码</label>
+                    <input type="password" class="form-input" id="loginPassword" placeholder="请输入密码">
+                </div>
+                <button class="btn btn-primary btn-block" onclick="handleLogin()" data-i18n="modal.loginBtn">登录</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Register Modal -->
+    <div class="modal-overlay" id="registerModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" data-i18n="modal.register">注册</div>
+                <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" data-i18n="form.phone">手机号/邮箱</label>
+                    <input type="text" class="form-input" id="regEmail" placeholder="请输入手机号或邮箱">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" data-i18n="form.password">密码</label>
+                    <input type="password" class="form-input" id="regPassword" placeholder="请设置密码">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" data-i18n="form.code">验证码</label>
+                    <div style="display:flex;gap:12px">
+                        <input type="text" class="form-input" placeholder="请输入验证码" style="flex:1">
+                        <button class="btn btn-outline" data-i18n="form.sendCode">发送验证码</button>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-block" onclick="handleRegister()" data-i18n="modal.registerBtn">注册</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <script>
+        // ========== i18n Translations ==========
+        const i18n = {
+            zh: {
+                'nav.home': '首页', 'nav.services': '服务', 'nav.pricing': '运费', 'nav.tracking': '查询', 'nav.prohibited': '禁运品', 'nav.help': '帮助', 'nav.login': '登录', 'nav.register': '注册',
+                'hero.badge': '🚀 专业国际集运转运', 'hero.title': '中国转运<span>全球</span>', 'hero.subtitle': '高效、可信、便捷的中国至全球集运服务平台', 'hero.calcBtn': '快速询价', 'hero.learnBtn': '了解服务',
+                'hero.stat1': '15+国家', 'hero.stat2': '7天时效', 'hero.stat3': '30天仓储', 'hero.stat4': '24h客服',
+                'calc.title': '快速询价', 'calc.dest': '目的地', 'calc.weight': '重量', 'calc.service': '运输方式', 'calc.calculate': '计算', 'calc.result': '预估运费',
+                'features.title': '为什么选择我们', 'features.f1.title': '全程追踪', 'features.f1.desc': '实时物流轨迹，多语言展示', 'features.f2.title': '智能合箱', 'features.f2.desc': '免费合箱、加固、去包装', 'features.f3.title': '多语种服务', 'features.f3.desc': '支持中文、英文等7种语言', 'features.f4.title': '安全支付', 'features.f4.desc': '微信、支付宝、PayPal',
+                'services.title': '我们的服务', 'services.subtitle': '从包裹代收到国际运输，一站式专业服务',
+                'steps.title': '三步完成下单', 'steps.s1': '预报包裹', 'steps.s2': '选择线路', 'steps.s3': '支付发货', 'steps.s4': '坐等收货',
+                'warehouse.title': '国内仓库地址', 'warehouse.subtitle': '注册登录后获取您的专属仓库地址', 'warehouse.address': '山东省青岛市市北区', 'warehouse.recipient': '您的用户识别码', 'warehouse.phone': '登录后查看', 'warehouse.storage': '免费仓储', 'warehouse.copy': '复制',
+                'pricing.title': '运费价格表', 'pricing.subtitle': '发货地：山东青岛 | 运费已含30元操作费', 'pricing.dest': '目的地', 'pricing.air': '空运', 'pricing.sea': '海运', 'pricing.express': '快递', 'pricing.line': '专线',
+                'prohibited.title': '禁运品查询', 'prohibited.subtitle': '根据中国海关及国际运输规定', 'prohibited.danger': '危险品', 'prohibited.weapon': '武器类', 'prohibited.drug': '药品类', 'prohibited.food': '食品类', 'prohibited.other': '其他',
+                'tracking.title': '物流查询', 'tracking.placeholder': '请输入运单号', 'tracking.btn': '查询',
+                'help.title': '帮助中心', 'help.guide': '新手指南', 'help.faq': '常见问题', 'help.contact': '联系我们',
+                'chat.title': '在线客服', 'chat.subtitle': '工作日 9:00-22:00', 'chat.welcome': '您好！欢迎来到CN2Global。请问有什么可以帮您？', 'chat.quick.price': '运费查询', 'chat.quick.address': '仓库地址', 'chat.quick.prohibited': '禁运品', 'chat.quick.guide': '新手指南',
+                'modal.login': '登录', 'modal.register': '注册', 'modal.loginBtn': '登录', 'modal.registerBtn': '注册',
+                'form.phone': '手机号/邮箱', 'form.password': '密码', 'form.code': '验证码', 'form.sendCode': '发送验证码',
+                'footer.brand': 'CN2Global', 'footer.desc': '中国青岛 | 专业国际集运转运', 'footer.links': '快速链接', 'footer.about': '关于我们', 'footer.terms': '服务条款', 'footer.privacy': '隐私政策', 'footer.contact': '联系我们', 'footer.wechat': '微信客服', 'footer.telegram': 'Telegram',
+                'toast.loginSuccess': '登录成功！', 'toast.registerSuccess': '注册成功！', 'toast.copied': '已复制到剪贴板'
+            },
+            en: {
+                'nav.home': 'Home', 'nav.services': 'Services', 'nav.pricing': 'Pricing', 'nav.tracking': 'Track', 'nav.prohibited': 'Prohibited', 'nav.help': 'Help', 'nav.login': 'Login', 'nav.register': 'Register',
+                'hero.badge': '🚀 Professional International Shipping', 'hero.title': 'Ship from China<span> Worldwide</span>', 'hero.subtitle': 'Efficient, reliable, and convenient China-to-global shipping service', 'hero.calcBtn': 'Get Quote', 'hero.learnBtn': 'Learn More',
+                'hero.stat1': '15+ Countries', 'hero.stat2': '7 Days', 'hero.stat3': '30 Days Storage', 'hero.stat4': '24/7 Support',
+                'calc.title': 'Quick Quote', 'calc.dest': 'Destination', 'calc.weight': 'Weight', 'calc.service': 'Service', 'calc.calculate': 'Calculate', 'calc.result': 'Estimated Cost',
+                'features.title': 'Why Choose Us', 'features.f1.title': 'Full Tracking', 'features.f1.desc': 'Real-time tracking, multilingual support', 'features.f2.title': 'Smart Consolidation', 'features.f2.desc': 'Free consolidation, reinforcement, repacking', 'features.f3.title': 'Multilingual', 'features.f3.desc': 'Chinese, English, and more', 'features.f4.title': 'Secure Payment', 'features.f4.desc': 'WeChat, Alipay, PayPal, Credit Card',
+                'services.title': 'Our Services', 'services.subtitle': 'One-stop professional service from package reception to international shipping',
+                'steps.title': '3 Steps to Ship', 'steps.s1': 'Declare Package', 'steps.s2': 'Select Service', 'steps.s3': 'Pay & Ship', 'steps.s4': 'Receive',
+                'warehouse.title': 'China Warehouse Address', 'warehouse.subtitle': 'Register to get your exclusive warehouse address', 'warehouse.address': 'Qingdao, Shandong, China', 'warehouse.recipient': 'Your User ID', 'warehouse.phone': 'View after login', 'warehouse.storage': 'Free Storage', 'warehouse.copy': 'Copy',
+                'pricing.title': 'Shipping Rates', 'pricing.subtitle': 'From: Qingdao, China | Rates include CNY 30 handling fee', 'pricing.dest': 'Destination', 'pricing.air': 'Air', 'pricing.sea': 'Sea', 'pricing.express': 'Express', 'pricing.line': 'Line',
+                'prohibited.title': 'Prohibited Items', 'prohibited.subtitle': 'According to Chinese customs and international shipping regulations', 'prohibited.danger': 'Dangerous Goods', 'prohibited.weapon': 'Weapons', 'prohibited.drug': 'Drugs', 'prohibited.food': 'Food', 'prohibited.other': 'Others',
+                'tracking.title': 'Track Package', 'tracking.placeholder': 'Enter tracking number', 'tracking.btn': 'Track',
+                'help.title': 'Help Center', 'help.guide': 'Beginner Guide', 'help.faq': 'FAQ', 'help.contact': 'Contact Us',
+                'chat.title': 'Live Support', 'chat.subtitle': 'Mon-Sun 9:00-22:00', 'chat.welcome': 'Hello! Welcome to CN2Global. How can I help you?', 'chat.quick.price': 'Pricing', 'chat.quick.address': 'Warehouse', 'chat.quick.prohibited': 'Prohibited', 'chat.quick.guide': 'Guide',
+                'modal.login': 'Login', 'modal.register': 'Register', 'modal.loginBtn': 'Login', 'modal.registerBtn': 'Register',
+                'form.phone': 'Phone/Email', 'form.password': 'Password', 'form.code': 'Verification Code', 'form.sendCode': 'Send Code',
+                'footer.brand': 'CN2Global', 'footer.desc': 'Qingdao, China | Professional International Shipping', 'footer.links': 'Quick Links', 'footer.about': 'About Us', 'footer.terms': 'Terms', 'footer.privacy': 'Privacy', 'footer.contact': 'Contact', 'footer.wechat

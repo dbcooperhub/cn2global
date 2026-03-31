@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CN2Global - 中国转运全球 | 国际集运转运</title>
+    <meta name="description" content="中国青岛代收包裹，合箱打包，国际转运到全球。">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        html { scroll-behavior: smooth; }
+        .chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
+        .chat-btn { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); font-size: 24px; }
+        .chat-btn:hover { transform: scale(1.1); }
+        .chat-panel { position: absolute; bottom: 70px; right: 0; width: 300px; background: white; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: none; }
+        .chat-panel.active { display: block; }
+        .prohibited { border-left: 4px solid #ef4444; padding-left: 12px; margin: 8px 0; background: #fef2f2; padding: 8px 12px; border-radius: 4px; }
+        .restricted { border-left: 4px solid #f59e0b; padding-left: 12px; margin: 8px 0; background: #fffbeb; padding: 8px 12px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+    
+    <div class="chat-widget">
+        <button class="chat-btn" onclick="document.getElementById('chatPanel').classList.toggle('active')">💬</button>
+        <div class="chat-panel" id="chatPanel">
+            <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:16px;">
+                <h3 style="margin:0;font-size:18px;">联系客服</h3>
+                <p style="margin:4px 0 0;font-size:13px;opacity:0.9;">工作时间: 9:00-22:00</p>
+            </div>
+            <div style="padding:16px;">
+                <a href="https://t.me/cn2global" target="_blank" style="display:flex;align-items:center;gap:12px;padding:12px;border:1px solid #e5e7eb;border-radius:12px;margin-bottom:10px;text-decoration:none;color:inherit;">
+                    <div style="width:40px;height:40px;background:#0088cc;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;">✈️</div>
+                    <div><div style="font-weight:600;">Telegram</div><div style="font-size:12px;color:#666;">@cn2global</div></div>
+                </a>
+                <a href="javascript:void(0)" onclick="alert('微信号：cn2global')" style="display:flex;align-items:center;gap:12px;padding:12px;border:1px solid #e5e7eb;border-radius:12px;margin-bottom:10px;text-decoration:none;color:inherit;">
+                    <div style="width:40px;height:40px;background:#07c160;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;">💬</div>
+                    <div><div style="font-weight:600;">微信客服</div><div style="font-size:12px;color:#666;">cn2global</div></div>
+                </a>
+                <a href="mailto:service@cn2g.com" style="display:flex;align-items:center;gap:12px;padding:12px;border:1px solid #e5e7eb;border-radius:12px;text-decoration:none;color:inherit;">
+                    <div style="width:40px;height:40px;background:#ea4335;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;">📧</div>
+                    <div><div style="font-weight:600;">邮件</div><div style="font-size:12px;color:#666;">service@cn2g.com</div></div>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <script type="text/babel">
+        const { useState } = React;
+        
+        // 公告
+        const announcements = [
+            { type: 'important', title: '【重要】2026年春节假期通知', date: '2026-01-20', content: '春节期间（1月28日-2月4日）仓库暂停收发货，2月5日恢复正常。' },
+            { type: 'notice', title: '【通知】美国线路时效调整', date: '2026-03-15', content: '受国际物流影响，美国空运时效延长至7-12天。' },
+            { type: 'promo', title: '【活动】新用户首单立减20元', date: '2026-03-01', content: '优惠码：NEW2026，满200元可用。' },
+        ];
+        
+        // 禁运品
+        const prohibitedItems = [
+            { cat: '危险品', items: ['易燃易爆物品（烟花爆竹、汽油、酒精）', '压缩气体（液化气、喷雾罐）', '腐蚀性物品（硫酸、蓄电池）', '毒性物品（农药、杀虫剂）'] },
+            { cat: '武器类', items: ['枪支弹药、仿真枪、弓弩', '管制刀具、警用器械'] },
+            { cat: '药品类', items: ['毒品及替代品', '处方药（需凭处方购买）', '含麻黄碱药品'] },
+            { cat: '食品类', items: ['生鲜肉类、蛋类、奶制品', '植物种子、苗木、土壤'] },
+            { cat: '其他', items: ['假冒伪劣商品', '文物保护物品', '大量现金、有价证券'] },
+        ];
+        
+        const restrictedItems = [
+            { name: '化妆品', limit: '每件≤100ml，总量≤1L，需原包装' },
+            { name: '香水', limit: '单瓶≤100ml，需密封包装' },
+            { name: '锂电池', limit: '需安装在设备中，单独电池需UN38.3认证' },
+            { name: '液体', limit: '单件≤500ml，需防漏包装' },
+            { name: '保健品', limit: '需原包装，不超过个人自用合理数量' },
+        ];
+        
+        // 运费
+        const rates = {
+            'US': { n: '美国', air: { b: 118, p: 75 }, sea: { b: 198, p: 18 }, express: { b: 158, p: 95 }, line: { b: 98, p: 55 }, d: { air: '7-12', sea: '25-35', express: '5-7', line: '10-15' }, customs: '关税起征点$800' },
+            'UK': { n: '英国', air: { b: 108, p: 68 }, sea: { b: 188, p: 15 }, express: { b: 148, p: 88 }, line: { b: 88, p: 48 }, d: { air: '8-14', sea: '30-40', express: '5-8', line: '12-18' }, customs: '关税起征点£135' },
+            'DE': { n: '德国', air: { b: 108, p: 68 }, sea: { b: 188, p: 15 }, express: { b: 148, p: 88 }, line: { b: 88, p: 48 }, d: { air: '8-14', sea: '30-40', express: '5-8', line: '12-18' }, customs: '关税起征点€150' },
+            'FR': { n: '法国', air: { b: 108, p: 68 }, sea: { b: 188, p: 15 }, express: { b: 148, p: 88 }, line: { b: 88, p: 48 }, d: { air: '8-14', sea: '30-40', express: '5-8', line: '12-18' }, customs: '关税起征点€150' },
+            'JP': { n: '日本', air: { b: 78, p: 45 }, sea: { b: 168, p: 8 }, express: { b: 128, p: 65 }, line: { b: 58, p: 35 }, d: { air: '3-5', sea: '10-15', express: '2-3', line: '5-8' }, customs: '关税起征点¥10000' },
+            'KR': { n: '韩国', air: { b: 78, p: 45 }, sea: { b: 168, p: 8 }, express: { b: 128, p: 65 }, line: { b: 58, p: 35 }, d: { air: '3-5', sea: '8-12', express: '2-3', line: '5-8' }, customs: '关税起征点$150' },
+            'AU': { n: '澳大利亚', air: { b: 108, p: 65 }, sea: { b: 198, p: 12 }, express: { b: 158, p: 85 }, line: { b: 88, p: 45 }, d: { air: '7-12', sea: '20-30', express: '5-7', line: '10-15' }, customs: '关税起征点AUD1000' },
+            'CA': { n: '加拿大', air: { b: 118, p: 72 }, sea: { b: 198, p: 16 }, express: { b: 158, p: 92 }, line: { b: 98, p: 52 }, d: { air: '8-14', sea: '30-45', express: '5-8', line: '12-18' }, customs: '关税起征点CAD20' },
+            'SG': { n: '新加坡', air: { b: 68, p: 38 }, sea: { b: 158, p: 6 }, express: { b: 108, p: 55 }, line: { b: 48, p: 28 }, d: { air: '3-5', sea: '8-12', express: '2-3', line: '5-7' }, customs: '关税起征点SGD400' },
+            'MY': { n: '马来西亚', air: { b: 68, p: 40 }, sea: { b: 158, p: 7 }, express: { b: 108, p: 58 }, line: { b: 48, p: 30 }, d: { air: '4-6', sea: '10-15', express: '3-4', line: '6-8' }, customs: '关税起征点MYR500' },
+            'TH': { n: '泰国', air: { b: 68, p: 42 }, sea: { b: 158, p: 8 }, express: { b: 108, p: 60 }, line: { b: 48, p: 32 }, d: { air: '4-6', sea: '12-18', express: '3-4', line: '6-10' }, customs: '关税起征点THB1500' },
+            'VN': { n: '越南', air: { b: 58, p: 35 }, sea: { b: 148, p: 5 }, express: { b: 98, p: 50 }, line: { b: 38, p: 25 }, d: { air: '3-5', sea: '8-12', express: '2-3', line: '4-6' }, customs: '关税起征点VND1000000' },
+            'NZ': { n: '新西兰', air: { b: 118, p: 72 }, sea: { b: 208, p: 14 }, express: { b: 168, p: 92 }, line: { b: 98, p: 52 }, d: { air: '8-12', sea: '25-35', express: '5-8', line: '12-18' }, customs: '关税起征点NZD400' },
+            'IT': { n: '意大利', air: { b: 108, p: 68 }, sea: { b: 188, p: 15 }, express: { b: 148, p: 88 }, line: { b: 88, p: 48 }, d: { air: '8-14', sea: '30-40', express: '5-8', line: '12-18' }, customs: '关税起征点€150' },
+            'ES': { n: '西班牙', air: { b: 108, p: 68 }, sea: { b: 188, p: 15 }, express: { b: 148, p: 88 }, line: { b: 88, p: 48 }, d: { air: '8-14', sea: '30-40', express: '5-8', line: '12-18' }, customs: '关税起征点€150' },
+            'NL': { n: '荷兰', air: { b: 108, p: 68 }, sea: { b: 188, p: 15 }, express: { b: 148, p: 88 }, line: { b: 88, p: 48 }, d: { air: '8-14', sea: '30-40', express: '5-8', line: '12-18' }, customs: '关税起征点€150' },
+            'RU': { n: '俄罗斯', air: { b: 98, p: 58 }, sea: { b: 178, p: 12 }, express: { b: 138, p: 78 }, line: { b: 78, p: 42 }, d: { air: '10-18', sea: '30-45', express: '7-12', line: '15-25' }, customs: '关税起征点€200' },
+            'AE': { n: '阿联酋', air: { b: 88, p: 52 }, sea: { b: 178, p: 10 }, express: { b: 128, p: 72 }, line: { b: 68, p: 38 }, d: { air: '6-10', sea: '18-25', express: '4-6', line: '8-12' }, customs: '关税起征点AED1000' },
+            'TW': { n: '台湾', air: { b: 58, p: 32 }, sea: { b: 148, p: 5 }, express: { b: 98, p: 48 }, line: { b: 38, p: 22 }, d: { air: '2-3', sea: '5-8', express: '1-2', line: '3-5' }, customs: '关税起征点NTD2000' },
+            'HK': { n: '香港', air: { b: 48, p: 28 }, sea: { b: 138, p: 4 }, express: { b: 88, p: 42 }, line: { b: 28, p: 18 }, d: { air: '1-2', sea: '3-5', express: '1', line: '2-3' }, customs: '无关税' },
+        };
+        
+        const destinations = Object.keys(rates);
+        
+        function App() {
+            const [page, setPage] = useState('home');
+            const [price, setPrice] = useState(null);
+            const [detail, setDetail] = useState(null);
+            const [calc, setCalc] = useState({ dest: 'US', weight: 1, service: 'air' });
+            const [showBanner, setShowBanner] = useState(true);
+            
+            const calcPrice = () => {
+                const r = rates[calc.dest][calc.service];
+                const total = r.b + Math.max(0, calc.weight - 1) * r.p;
+                setPrice(total);
+                setDetail({ ...rates[calc.dest], service: calc.service });
+            };
+            
+            return (
+                <div style={{minHeight:'100vh',background:'white'}}>
+                    {/* 导航 */}
+                    <nav style={{position:'fixed',top:0,left:0,right:0,background:'white',boxShadow:'0 1px 3px rgba(0,0,0,0.1)',zIndex:50}}>
+                        <div style={{maxWidth:1200,margin:'0 auto',padding:'0 16px',height:64,display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                            <div style={{fontSize:24,fontWeight:'bold',color:'#2563eb',cursor:'pointer'}} onClick={()=>setPage('home')}>CN2Global</div>
+                            <div style={{display:'flex',gap:24}}>
+                                <button onClick={()=>setPage('home')} style={{background:'none',border:'none',cursor:'pointer',color:'#374151'}}>首页</button>
+                                <button onClick={()=>setPage('services')} style={{background:'none',border:'none',cursor:'pointer',color:'#374151'}}>服务</button>
+                                <button onClick={()=>setPage('price')} style={{background:'none',border:'none',cursor:'pointer',color:'#374151'}}>运费</button>
+                                <button onClick={()=>setPage('notice')} style={{background:'none',border:'none',cursor:'pointer',color:'#374151'}}>公告</button>
+                                <button onClick={()=>setPage('prohibited')} style={{background:'none',border:'none',cursor:'pointer',color:'#374151'}}>禁运</button>
+                                <button onClick={()=>setPage('tracking')} style={{background:'none',border:'none',cursor:'pointer',color:'#374151'}}>查询</button>
+                            </div>
+                            <div style={{display:'flex',gap:12,alignItems:'center'}}>
+                                <button style={{color:'#2563eb',background:'none',border:'none',cursor:'pointer'}}>登录</button>
+                                <button style={{background:'#2563eb',color:'white',padding:'8px 16px',border:'none',borderRadius:8,cursor:'pointer'}}>注册</button>
+                            </div>
+                        </div>
+                    </nav>
+                    
+                    {/* 首页 */}
+                    {page === 'home' && (
+                        <div style={{paddingTop:64}}>
+                            {/* 公告横幅 */}
+                            {showBanner && (
+                                <div style={{background:'linear-gradient(to right,#f97316,#ef4444)',color:'white',padding:'12px 16px'}}>
+                                    <div style={{maxWidth:1200,margin:'0 auto',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                                        <div>📢 新用户首单立减20元！优惠码：NEW2026</div>
+                                        <button onClick={()=>setShowBanner(false)} style={{background:'none',border:'none',color:'white',cursor:'pointer'}}>✕</button>
+                                    </div>
+                                </div>
+                            )}
+                            
+                            {/* Hero */}
+                            <section style={{background:'linear-gradient(135deg,#2563eb,#1d4ed8)',color:'white',padding:'80px 16px',textAlign:'center'}}>
+                                <h1 style={{fontSize:48,marginBottom:16}}>中国转运全球</h1>
+                                <p style={{fontSize:20,marginBottom:8,opacity:0.9}}>专业国际集运转运服务平台</p>
+                                <p style={{fontSize:14,marginBottom:32,opacity:0.8}}>📦 发货地：中国青岛 | 覆盖全球20+国家</p>
+                                <div style={{display:'flex',gap:16,justifyContent:'center'}}>
+                                    <button onClick={()=>setPage('price')} style={{background:'white',color:'#2563eb',padding:'12px 24px',border:'none',borderRadius:12,fontWeight:600,cursor:'pointer',fontSize:16}}>快速询价</button>
+                                    <button onClick={()=>setPage('services')} style={{border:'2px solid white',color:'white',padding:'12px 24px',borderRadius:12,fontWeight:600,cursor:'pointer',fontSize:16,background:'transparent'}}>了解服务</button>
+                                </div>
+                            </section>
+                            
+                            {/* 计算器 */}
+                            <section style={{padding:'48px 16px',background:'#f9fafb'}}>
+                                <div style={{maxWidth:600,margin:'0 auto',background:'white',borderRadius:16,boxShadow:'0 4px 6px rgba(0,0,0,0.1)',padding:24}}>
+                                    <h2 style={{fontSize:20,fontWeight:'bold',textAlign:'center',marginBottom:24}}>快速询价</h2>
+                                    <div style={{display:'grid',gridTemplateColumns:'repeat(2, 1fr)',gap:16,marginBottom:16}}>
+                                        <select value={calc.dest} onChange={e=>setCalc({...calc,dest:e.target.value})} style={{padding:12,border:'1px solid #d1d5db',borderRadius:8}}>
+                                            {destinations.map(d=><option key={d} value={d}>{rates[d].n}</option>)}
+                                        </select>
+                                        <input type="number" value={calc.weight} onChange={e=>setCalc({...calc,weight:Number(e.target.value)})} style={{padding:12,border:'1px solid #d1d5db',borderRadius:8}} placeholder="重量

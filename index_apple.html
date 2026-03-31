@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CN2Global - 中国转运全球</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0071e3;
+            --dark: #1d1d1f;
+            --gray: #86868b;
+            --light: #f5f5f7;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; color: var(--dark); line-height: 1.5; }
+        
+        /* Nav */
+        .nav { position: fixed; top: 0; left: 0; right: 0; height: 48px; background: rgba(255,255,255,0.8); backdrop-filter: blur(20px); z-index: 9999; border-bottom: 1px solid rgba(0,0,0,0.08); }
+        .nav-inner { max-width: 1024px; margin: 0 auto; height: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 22px; }
+        .nav-logo { font-size: 21px; font-weight: 600; color: var(--dark); text-decoration: none; cursor: pointer; }
+        .nav-links { display: flex; gap: 32px; }
+        .nav-links a { font-size: 12px; color: var(--dark); text-decoration: none; opacity: 0.8; transition: opacity 0.3s; cursor: pointer; }
+        .nav-links a:hover { opacity: 1; }
+        .nav-btns { display: flex; gap: 12px; align-items: center; }
+        .btn { padding: 8px 16px; font-size: 12px; font-weight: 500; border-radius: 980px; border: none; cursor: pointer; transition: all 0.3s; text-decoration: none; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #0077ed; }
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+        .btn-outline:hover { background: var(--primary); color: white; }
+        .btn-large { padding: 18px 40px; font-size: 17px; }
+        
+        /* Hero */
+        .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 120px 24px 80px; background: linear-gradient(180deg, #fbfbfd 0%, #fff 100%); }
+        .hero-tag { font-size: 17px; font-weight: 600; color: var(--primary); margin-bottom: 8px; }
+        .hero-title { font-size: clamp(40px, 8vw, 80px); font-weight: 700; letter-spacing: -2px; line-height: 1.05; margin-bottom: 16px; }
+        .hero-sub { font-size: clamp(21px, 3vw, 28px); color: var(--gray); max-width: 600px; margin-bottom: 32px; }
+        .hero-meta { display: flex; gap: 24px; margin-bottom: 40px; flex-wrap: wrap; justify-content: center; }
+        .hero-meta span { font-size: 14px; color: var(--gray); display: flex; align-items: center; gap: 6px; }
+        .hero-meta strong { color: var(--dark); }
+        .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+        
+        .stats { margin-top: 60px; background: var(--gradient); border-radius: 20px; padding: 40px; max-width: 800px; width: 100%; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; background: white; border-radius: 12px; padding: 32px; }
+        .stat { text-align: center; }
+        .stat-value { font-size: 48px; font-weight: 700; letter-spacing: -2px; }
+        .stat-label { font-size: 14px; color: var(--gray); margin-top: 4px; }
+        
+        /* Sections */
+        .section { padding: 100px 24px; }
+        .section-gray { background: var(--light); }
+        .section-dark { background: var(--dark); color: white; }
+        .container { max-width: 1024px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 60px; }
+        .section-tag { font-size: 14px; font-weight: 600; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+        .section-title { font-size: clamp(32px, 5vw, 48px); font-weight: 700; letter-spacing: -1px; margin-bottom: 16px; }
+        .section-sub { font-size: 19px; color: var(--gray); max-width: 600px; margin: 0 auto; }
+        
+        /* Features */
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+        .feature { background: white; border-radius: 20px; padding: 40px 32px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); transition: transform 0.3s, box-shadow 0.3s; }
+        .feature:hover { transform: translateY(-8px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .feature-icon { width: 56px; height: 56px; background: var(--gradient); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 20px; }
+        .feature-title { font-size: 21px; font-weight: 600; margin-bottom: 8px; }
+        .feature-desc { font-size: 15px; color: var(--gray); line-height: 1.6; }
+        
+        /* Calculator */
+        .calc { background: white; border-radius: 20px; padding: 48px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-label { font-size: 12px; font-weight: 600; color: var(--gray); text-transform: uppercase; }
+        .form-select, .form-input { padding: 16px; border: 1px solid #d2d2d7; border-radius: 12px; font-size: 15px; font-family: inherit; }
+        .form-select:focus, .form-input:focus { outline: none; border-color: var(--primary); }
+        .price-result { text-align: center; padding: 32px; background: var(--light); border-radius: 12px; margin-top: 24px; }
+        .price-label { font-size: 14px; color: var(--gray); margin-bottom: 8px; }
+        .price-value { font-size: 56px; font-weight: 700; }
+        .price-value small { font-size: 24px; }
+        .price-detail { font-size: 14px; color: var(--gray); margin-top: 12px; }
+        
+        /* Steps */
+        .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 32px; }
+        .step { text-align: center; }
+        .step-num { width: 80px; height: 80px; background: white; border: 3px solid var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; color: var(--primary); margin: 0 auto 20px; transition: all 0.3s; }
+        .step:hover .step-num { background: var(--primary); color: white; }
+        .step-title { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+        .step-desc { font-size: 14px; color: var(--gray); }
+        
+        /* Pricing Table */
+        .pricing-table { width: 100%; border-collapse: collapse; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .pricing-table th, .pricing-table td { padding: 16px 20px; text-align: left; border-bottom: 1px solid #f0f0f0; }
+        .pricing-table th { background: var(--light); font-size: 12px; font-weight: 600; color: var(--gray); text-transform: uppercase; }
+        .pricing-table tbody tr:hover { background: #fafafa; }
+        .pricing-table td:first-child { font-weight: 600; }
+        
+        /* Warehouse */
+        .warehouse { background: linear-gradient(135deg, #1d1d1f 0%, #2d2d2f 100%); border-radius: 20px; padding: 48px; color: white; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+        .warehouse h3 { font-size: 32px; font-weight: 700; margin-bottom: 16px; }
+        .warehouse p { color: rgba(255,255,255,0.7); font-size: 17px; }
+        .warehouse-details { background: rgba(255,255,255,0.1); border-radius: 12px; padding: 24px; }
+        .warehouse-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .warehouse-item:last-child { border-bottom: none; }
+        .warehouse-item span:first-child { color: rgba(255,255,255,0.6); }
+        .warehouse-item span:last-child { font-weight: 600; }
+        
+        /* Footer */
+        .footer { background: var(--light); padding: 48px 24px; border-top: 1px solid #e0e0e0; }
+        .footer-content { max-width: 1024px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; }
+        .footer-brand { font-size: 24px; font-weight: 700; margin-bottom: 12px; }
+        .footer-tagline { color: var(--gray); font-size: 14px; }
+        .footer-title { font-size: 12px; font-weight: 600; color: var(--gray); text-transform: uppercase; margin-bottom: 16px; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 8px; }
+        .footer-links a { color: var(--dark); text-decoration: none; font-size: 14px; opacity: 0.8; }
+        .footer-links a:hover { opacity: 1; }
+        .footer-bottom { max-width: 1024px; margin: 48px auto 0; padding-top: 24px; border-top: 1px solid #e0e0e0; text-align: center; font-size: 12px; color: var(--gray); }
+        
+        /* Chat */
+        .chat-btn { position: fixed; bottom: 24px; right: 24px; width: 64px; height: 64px; border-radius: 50%; background: var(--gradient); color: white; border: none; cursor: pointer; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); font-size: 28px; z-index: 9998; transition: transform 0.3s; }
+        .chat-btn:hover { transform: scale(1.1); }
+        .chat-panel { position: fixed; bottom: 100px; right: 24px; width: 380px; background: white; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); display: none; flex-direction: column; z-index: 9998; max-height: 600px; }
+        .chat-panel.active { display: flex; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .chat-header { background: var(--gradient); color: white; padding: 24px; border-radius: 20px 20px 0 0; }
+        .chat-header h3 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+        .chat-header p { font-size: 13px; opacity: 0.9; }
+        .chat-body { flex: 1; padding: 20px; overflow-y: auto; }
+        .chat-msg { padding: 12px 16px; border-radius: 16px; margin-bottom: 8px; max-width: 85%; font-size: 14px; }
+        .chat-msg.bot { background: var(--light); }
+        .chat-msg.user { background: var(--primary); color: white; margin-left: auto; }
+        .chat-quick { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+        .chat-quick button { padding: 8px 16px; background: rgba(0,113,227,0.1); color: var(--primary); border: none; border-radius: 980px; font-size: 13px; cursor: pointer; }
+        .chat-quick button:hover { background: var(--primary); color: white; }
+        .chat-input { display: flex; gap: 8px; }
+        .chat-input input { flex: 1; padding: 14px 18px; border: 1px solid #e0e0e0; border-radius: 980px; font-size: 14px; }
+        .chat-input button { width: 44px; height: 44px; border-radius: 50%; background: var(--primary); color: white; border: none; cursor: pointer; font-size: 18px; }
+        
+        /* Prohibited */
+        .prohibited-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .prohibited-card { background: white; border-radius: 12px; padding: 24px; border-left: 4px solid #ff3b30; }
+        .prohibited-card h4 { font-size: 17px; font-weight: 600; margin-bottom: 12px; }
+        .prohibited-card ul { list-style: none; font-size: 14px; color: var(--gray); }
+        .prohibited-card li { padding: 6px 0 6px 16px; position: relative; }
+        .prohibited-card li::before { content: '•'; position: absolute; left: 0; color: #ff3b30; }
+        .restricted-card { border-left-color: #ff9500; }
+        .restricted-card li::before { color: #ff9500; }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .calc-grid { grid-template-columns: 1fr 1fr; }
+            .steps { grid-template-columns: repeat(3, 1fr); }
+            .warehouse { grid-template-columns: 1fr; }
+            .footer-content { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .calc-grid { grid-template-columns: 1fr; }
+            .steps { grid-template-columns: repeat(2, 1fr); }
+            .footer-content { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <div class="nav-logo" onclick="showPage('home')">CN2Global</div>
+            <div class="nav-links">
+                <a onclick="showPage('home')">首页</a>
+                <a onclick="showPage('services')">服务</a>
+                <a onclick="showPage('pricing')">运费</a>
+                <a onclick="showPage('prohibited')">禁运品</a>
+                <a onclick="showPage('faq')">帮助</a>
+            </div>
+            <div class="nav-btns">
+                <select onchange="changeLang(this.value)" style="padding: 6px 12px; border-radius: 980px; border: 1px solid #d2d2d7; font-size: 12px; cursor: pointer;">
+                    <option value="zh">🇨🇳 中文</option>
+                    <option value="en">🇺🇸 EN</option>
+                    <option value="ja">🇯🇵 日本語</option>
+                    <option value="ko">🇰🇷 한국어</option>
+                </select>
+                <button class="btn" style="color: var(--primary); background: none;">登录</button>
+                <button class="btn btn-primary">注册</button>
+            </div>
+        </div>
+    </nav>
+    
+    <main id="main"></main>
+    
+    <button class="chat-btn" id="chatBtn">💬</button>
+    <div class="chat-panel" id="chatPanel">
+        <div class="chat-header">
+            <h3>CN2Global 客服</h3>
+            <p>工作时间: 9:00-22:00 (GMT+8)</p>
+        </div>
+        <div class="chat-body">
+            <div id="chatMessages">
+                <div class="chat-msg bot">您好！欢迎来到CN2Global转运服务。有什么可以帮您？</div>
+            </div>
+            <div class="chat-quick">
+                <button onclick="sendMsg('运费查询')">💰 运费</button>
+                <button onclick="sendMsg('仓库地址')">📦 地址</button>
+                <button onclick="sendMsg('禁运品')">🚫 禁运</button>
+                <button onclick="sendMsg('如何操作')">📖 流程</button>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="chatInput" placeholder="输入消息..." onkeypress="if(event.key==='Enter')sendMsg()">
+                <button onclick="sendMsg()">➤</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('chatBtn').onclick = function() { document.getElementById('chatPanel').classList.toggle('active'); };
+        
+        function sendMsg(text) {
+            const input = document.getElementById('chatInput');
+            const msg = text || input.value.trim();
+            if (!msg) return;
+            const container = document.getElementById('chatMessages');
+            container.innerHTML += '<div class="chat-msg user">' + msg + '</div>';
+            input.value = '';
+            setTimeout(function() {
+                const replies = {
+                    '运费查询': '【运费说明】\n空运：首重¥68-118，续重¥28-75/kg\n海运：首重¥138-228，续重¥4-22/kg\n快递：首重¥88-188，续重¥42-108/kg\n专线：首重¥28-118，续重¥18-65/kg\n\n具体价格请在首页运费查询查看。',
+                    '仓库地址': '【仓库地址】\n地址：山东省青岛市市北区 [详细地址登录后查看]\n收件人：您的用户识别码\n联系电话：登录后查看\n\n注册后可在个人中心查看专属仓库地址。',
+                    '禁运品': '【禁运品】\n❌ 危险品：易燃易爆、压缩气体、腐蚀性物品\n❌ 武器类：枪支弹药、管制刀具\n❌ 药品类：毒品、处方药、含麻黄碱药品\n❌ 食品类：生鲜肉类、植物种子\n❌ 其他：假冒伪劣商品、文物、大量现金\n\n⚠️ 限制物品：化妆品≤100ml、香水≤100ml、锂电池需安装设备中',
+                    '如何操作': '【操作流程】\n1️⃣ 注册账号获取专属仓库地址\n2️⃣ 在淘宝/京东等平台购物，填写仓库地址\n3️⃣ 包裹入库后系统通知您\n4️⃣ 申请发货，支付运费\n5️⃣ 坐等收货！\n\n💡 新用户优惠：首单满200减20，优惠码 NEW2026'
+                };
+                const reply = replies[msg] || '感谢您的咨询！如需更多帮助，请联系我们：\n📱 Telegram: @cn2global\n💬 微信: cn2global\n📧 邮箱: service@cn2g.com';
+                container.innerHTML += '<div class="chat-msg bot" style="white-space: pre-line;">' + reply + '</div>';
+                container.scrollTop = container.scrollHeight;
+            }, 500);
+        }
+        
+        // Rates data
+        const rates = {
+            'US': {n:'美国', air:{b:118,p:75}, sea:{b:198,p:18}, express:{b:158,p:95}, line:{b:98,p:55}, days:{air:'7-12',sea:'25-35',express:'5-7',line:'10-15'}},
+            'UK': {n:'英国', air:{b:108,p:68}, sea:{b:188,p:15}, express:{b:148,p:88}, line:{b:88,p:48}, days:{air:'8-14',sea:'30-40',express:'5-8',line:'12-18'}},
+            'DE': {n:'德国', air:{b:108,p:68}, sea:{b:188,p:15}, express:{b:148,p:88}, line:{b:88,p:48}, days:{air:'8-14',sea:'30-40',express:'5-8',line:'12-18'}},
+            'JP': {n:'日本', air:{b:78,p:45}, sea:{b:168,p:8}, express:{b:128,p:65}, line:{b:58,p:35}, days:{air:'3-5',sea:'10-15',express:'2-3',line:'5-8'}},
+            'KR': {n:'韩国', air:{b:78,p:45}, sea:{b:168,p:8}, express:{b:128,p:65}, line:{b:58,p:35}, days:{air:'3-5',sea:'8-12',express:'2-3',line:'5-8'}},
+            'AU': {n:'澳大利亚', air:{b:108,p:65}, sea:{b:198,p:12}, express:{b:158,p:85}, line:{b:88,p:45}, days:{air:'7-12',sea:'20-30',express:'5-7',line:'10-15'}},
+            'CA': {n:'加拿大', air:{b:118,p:72}, sea:{b:198,p:16}, express:{b:158,p:92}, line:{b:98,p:52}, days:{air:'8-14',sea:'30-45',express:'5-8',line:'12-18'}},
+            'SG': {n:'新加坡', air:{b:68,p:38}, sea:{b:158,p:6}, express:{b:108,p:55}, line:{b:48,p:28}, days:{air:'3-5',sea:'8-12',express:'2-3',line:'5-7'}},
+            'MY': {n:'马来西亚', air:{b:68,p:40}, sea:{b:158,p:7}, express:{b:108,p:58}, line:{b:48,p:30}, days:{air:'4-6',sea:'10-15',express:'3-4',line:'6-8'}},
+            'TH': {n:'泰国', air:{b:68,p:42}, sea:{b:158,p:8}, express:{b:108,p:60}, line:{b:48,p:32}, days:{air:'4-6',sea:'12-18',express:'3-4',line:'6-10'}},
+            'VN': {n:'越南', air:{b:58,p:35}, sea:{b:148,p:5}, express:{b:98,p:50}, line:{b:38,p:25}, days:{air:'3-5',sea:'8-12',express:'2-3',line:'4-6'}},
+            'NZ': {n:'新西兰', air:{b:118,p:72}, sea:{b:208,p:14}, express:{b:168,p:92}, line:{b:98,p:52}, days:{air:'8-12',sea:'25-35',express:'5-8',line:'12-18'}},
+            'TW': {n:'台湾', air:{b:58,p:32}, sea:{b:148,p:5}, express:{b:98,p:48}, line:{b:38,p:22}, days:{air:'2-3',sea:'5-8',express:'1-2',line:'3-5'}},
+            'HK': {n:'香港', air:{b:48,p:28}, sea:{b:138,p:4}, express:{b:88,p:42}, line:{b:28,p:18}, days:{air:'1-2',sea:'3-5',express:'1',line:'2-3'}}
+        };
+        const destinations = Object.keys(rates);
+        
+        function calculatePrice() {
+            const dest = document.getElementById('destSelect').value;
+            const weight = parseFloat(document.getElementById('weightInput').value) || 1;
+            const service = document.getElementById('serviceSelect').value;
+            const r = rates[dest][service];
+            const price = r.b + Math.max(0, weight - 1) * r.p;
+            document.getElementById('priceValue').textContent = price;
+            document.getElementById('priceDetail').textContent = '首重¥' + r.b + ' + 续重¥' + r.p + '/kg | 时效: ' + rates[dest].days[service] + '天';
+            document.getElementById('priceResult').style.display = 'block';
+        }
+        
+        function showPage(page) {
+            const main = document.getElementById('main');
+            if (page === 'home') {
+                main.innerHTML = `
+                    <section class="hero">
+                        <div class="hero-tag">国际集运转运服务</div>
+                        <h1 class="hero-title">中国转运全球</h1>
+                        <p class="hero-sub">专业、快速、安全。从青岛直达全球20+国家，让您的包裹轻松跨越国界。</p>
+                        <div class="hero-meta">
+                            <span><strong>📍 发货地：青岛</strong></span>
+                            <span><strong>⏱ 时效：2-35天</strong></span>
+                            <span><strong>🛡 安全保障</strong></span>
+                        </div>
+                        <div class="hero-actions">
+                            <button class="btn btn-primary btn-large" onclick="showPage('pricing')">立即询价</button>
+                            <button class="btn btn-outline btn-large" onclick="showPage('services')">了解服务</button>
+                        </div>
+                        <div class="stats">
+                            <div class="stats-grid">
+                                <div class="stat"><div class="stat-value">20+</div><div class="stat-label">覆盖国家</div></div>
+                                <div class="stat"><div class="stat-value">7</div><div class="stat-label">支持语种</div></div>
+                                <div class="stat"><div class="stat-value">30天</div><div class="stat-label">免费仓储</div></div>
+                                <div class="stat"><div class="stat-value">24h</div><div class="stat-label">在线客服</div></div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section class="section section-gray">
+                        <div class="container">
+                            <div class="section-header">
+                                <div class="section-tag">为什么选择我们</div>
+                                <h2 class="section-title">专业服务，值得信赖</h2>
+                                <p class="section-sub">从包裹代收到国际运输，我们提供一站式专业服务</p>
+                            </div>
+                            <div class="features">
+                                <div class="feature"><div class="feature-icon">🌐</div><h3 class="feature-title">7大语种服务</h3><p class="feature-desc">支持中文、英文、日文、韩文、越南语、西班牙语、印尼语</p></div>
+                                <div class="feature"><div class="feature-icon">📦</div><h3 class="feature-title">智能合箱打包</h3><p class="feature-desc">免费合箱、加固、去除包装，专业打包节省运费</p></div>
+                                <div class="feature"><div class="feature-icon">📍</div><h3 class="feature-title">全程物流追踪</h3><p class="feature-desc">实时物流轨迹，多语言展示，随时掌握包裹动态</p></div>
+                                <div class="feature"><div class="feature-icon">💳</div><h3 class="feature-title">安全支付方式</h3><p class="feature-desc">支持微信、支付宝、PayPal、信用卡等多种支付</p></div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section class="section">
+                        <div class="container">
+                            <div class="section-header">
+                                <div class="section-tag">运费计算</div>
+                                <h2 class="section-title">快速询价</h2>
+                                <p class="section-sub">透明定价，无隐藏费用</p>
+                            </div>
+                            <div class="calc">
+                                <div class="calc-grid">
+                                    <div class="form-group"><label class="form-label">目的地</label><select class="form-select" id="destSelect">${destinations.map(d=>'<option value="'+d+'">'+rates[d].n+'</option>').join('')}</select></div>
+                                    <div class="form-group"><label class="form-label">重量 (kg)</label><input type="number" class="form-input" id="weightInput" value="1" min="0.1" step="0.1"></div>
+                                    <div class="form-group"><label class="form-label">运输方式</label><select class="form-select" id="serviceSelect"><option value="air">空运</option><option value="sea">海运</option><option value="express">快递</option><option value="line">专线</option></select></div>
+                                    <div class="form-group" style="display:flex;align-items:flex-end;"><button class="btn btn-primary" style="width:100%;padding:16px;font-size:15px;" onclick="calculatePrice()">计算运费</button></div>
+                                </div>
+                                <div class="price-result" id="priceResult" style="display:none;"><div class="price-label">预估运费</div><div class="price-value"><small>¥</small><span id="priceValue">0</span></div><div class="price-detail" id="priceDetail"></div></div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section class="section section-gray">
+                        <div class="container">
+                            <div class="section-header">
+                                <div class="section-tag">仓库地址</div>
+                                <h2 class="section-title">获取您的专属仓库地址</h2>
+                            </div>
+                            <div class="warehouse">
+                                <div>
+                                    <h3>中国青岛仓库</h3>
+                                    <p>注册登录后，您将获得专属的仓库地址和用户识别码，用于接收国内电商包裹。</p>
+                                </div>
+                                <div class="warehouse-details">
+                                    <div class="warehouse-item"><span>地址</span><span>山东省青岛市市北区 [登录后查看]</span></div>
+                                    <div class="warehouse-item"><span>收件人</span><span>您的用户识别码</span></div>
+                                    <div class="warehouse-item"><span>联系电话</span><span>登录后查看</span></div>
+                                    <div class="warehouse-item"><span>免费仓储</span><span>30天</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section class="section">
+                        <div class="container">
+                            <div class="section-header">
+                                <div class="section-tag">操作流程</div>
+                                <h2 class="section-title">简单四步，轻松转运</h2>
+                            </div>
+                            <div class="steps">
+                                <div class="step"><div class="step-num">1</div><h4 class="step-title">注册账号</h4><p class="step-desc">获取专属仓库地址</p></div>
+                                <div class="step"><div class="step-num">2</div><h4 class="step-title">购物填写</h4><p class="step-desc">电商地址填仓库</p></div>
+                                <div class="step"><div class="step-num">3</div><h4 class="step-title">仓库入库</h4><p class="step-desc">系统自动通知</p></div>
+                                <div class="step"><div class="step-num">4</div><h4 class="step-title">支付发货</h4><p class="step-desc">坐等收货</p></div>
+                                <div class="step"><div class="step-num">5</div><h4 class="step-title">收货确认</h4><p class="step-desc">完成订单</p></div>
+                            </div>
+                        </div>
+                    </section>
+                `;
+            } else if (page === 'pricing') {
+                main.innerHTML = `
+                    <section class="section" style="padding-top:100px;">
+                        <div class="container">
+                            <div class="section-header">
+                                <div class="section-tag">运费价格</div>
+                                <h2 class="section-title">全球运费一览表</h2>
+                                <p class="section-sub">发货地：山东省青岛市 | 运费已含30元操作费</p>
+                            </div>
+                            <div style="overflow-x:auto;">
+                                <table class="pricing-table">
+                                    <thead><tr><th>目的地</th><th>空运 (首重/续重)</th><th>海运 (首重/续重)</th><th>快递 (首重/续重)</th><th>专线 (首重/续重)</th></tr></thead>
+                                    <tbody>
+                                        ${destinations.map(d=>'<tr><td>'+rates[d].n+'</td><td>¥'+rates[d].air.b+'/'+rates[d].air.p+'<br><span style="color:#86868
